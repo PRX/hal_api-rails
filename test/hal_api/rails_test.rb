@@ -1,7 +1,7 @@
 require 'test_helper'
 
-class HalApi::RailsTest < Minitest::Test
-  def test_that_it_has_a_version_number
-    refute_nil ::HalApi::Rails::VERSION
+decribe HalApi::Rails do
+  it 'has a version number' do
+    ::HalApi::Rails::VERSION.wont_be_nil
   end
 end

@@ -2,7 +2,6 @@ require 'active_support/concern'
 
 # expects underlying model to have filename, class, and id attributes
 module HalApi::Representers::Caches
-
   extend ActiveSupport::Concern
 
   # Pass in an option for the format this is going `to_`
@@ -16,7 +15,7 @@ module HalApi::Representers::Caches
   def create_representation_with(doc, options, format)
     cache.fetch(cache_key(represented, options), cache_options) do
       response = super(doc, options, format)
-      response = Caches::SerializedJson.new(JSON.dump(response)) if (options[:to_] == :json)
+      response = HalApi::Representers::Caches::SerializedJson.new(JSON.dump(response)) if (options[:to_] == :json)
       response
     end
   end
