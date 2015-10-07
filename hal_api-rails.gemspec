@@ -6,12 +6,12 @@ require 'hal_api/rails/version'
 Gem::Specification.new do |spec|
   spec.name          = "hal_api-rails"
   spec.version       = HalApi::Rails::VERSION
-  spec.authors       = ["Chris Rhoden"]
-  spec.email         = ["carhoden@gmail.com"]
+  spec.authors       = ["Chris Rhoden", "Andrew Kuklewicz"]
+  spec.email         = ["carhoden@gmail.com", "andrew@beginsinwonder.com"]
 
-  spec.summary       = %q{TODO: Write a short summary, because Rubygems requires one.}
-  spec.description   = %q{TODO: Write a longer description or delete this line.}
-  spec.homepage      = "TODO: Put your gem's website or public repo URL here."
+  spec.summary       = %q{JSON HAL APIs on Rails in the style of PRX}
+  spec.description   = %q{JSON HAL APIs on Rails in the style of PRX v4. Uses ROAR}
+  spec.homepage      = "https://www.github.com/PRX/"
   spec.license       = "MIT"
 
   # Prevent pushing this gem to RubyGems.org by setting 'allowed_push_host', or
