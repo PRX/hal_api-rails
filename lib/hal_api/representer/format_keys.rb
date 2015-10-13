@@ -2,7 +2,7 @@ require 'active_support/concern'
 
 # Link relation names seem to have a standard of being dasherized, as they are URIs
 # property names, on the other hand should, should be camelcase, lower first
-module HalApi::Representers::FormatKeys
+module HalApi::Representer::FormatKeys
   extend ActiveSupport::Concern
 
   module ClassMethods

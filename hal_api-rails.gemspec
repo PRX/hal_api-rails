@@ -28,10 +28,12 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_dependency "activemodel", ">= 3.0.0"
-  spec.add_dependency "roar", "~> 0.12"
   spec.add_dependency "actionpack", ">= 3.0.0"
   spec.add_dependency "rack-test", "~> 0.6.2"
   spec.add_dependency "activesupport", ">= 3.0.0"
+  spec.add_dependency "responders", "~> 2.0"
+  spec.add_dependency "roar-rails", "~> 1.0.1"
+  spec.add_dependency "multi_json"
 
   spec.add_development_dependency "bundler", "~> 1.10"
   spec.add_development_dependency "rake", "~> 10.0"

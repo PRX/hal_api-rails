@@ -1,7 +1,7 @@
 require 'active_support/concern'
 
 # expects underlying model to have filename, class, and id attributes
-module HalApi::Representers::Caches
+module HalApi::Representer::Caches
   extend ActiveSupport::Concern
 
   # Pass in an option for the format this is going `to_`

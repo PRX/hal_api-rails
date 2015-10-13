@@ -1,6 +1,6 @@
 require 'active_support/concern'
 
-module HalApi::Representers::Curies
+module HalApi::Representer::Curies
   extend ActiveSupport::Concern
 
   included do

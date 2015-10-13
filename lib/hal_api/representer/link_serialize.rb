@@ -1,6 +1,6 @@
 require 'active_support/concern'
 
-module HalApi::Representers::LinkSerialize
+module HalApi::Representer::LinkSerialize
 
   extend ActiveSupport::Concern
 

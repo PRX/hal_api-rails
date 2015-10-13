@@ -3,7 +3,7 @@
 require 'active_support/concern'
 
 # expects underlying model to have filename, class, and id attributes
-module UriMethods
+module HalApi::Representer::UriMethods
   extend ActiveSupport::Concern
 
   module ClassMethods

@@ -1,4 +1,4 @@
-require 'roar/representer/json/hal'
+require 'roar/json/hal'
 
 module HalApi::Errors
   class UnsupportedMediaType < StandardError
@@ -16,7 +16,7 @@ module HalApi::Errors
   end
 
   module Representer
-    include Roar::Representer::JSON::HAL
+    include Roar::JSON::HAL
 
     property :status
     property :message

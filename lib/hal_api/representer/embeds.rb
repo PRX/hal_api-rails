@@ -1,11 +1,11 @@
 require 'active_support/concern'
 
 # expects underlying model to have filename, class, and id attributes
-module HalApi::Representers::Embeds
+module HalApi::Representer::Embeds
   extend ActiveSupport::Concern
 
   included do
-    Representable::Mapper.send(:include, Embeds::Resources) if !Representable::Mapper.include?(Embeds::Resources)
+    Representable::Mapper.send(:include, Resources) if !Representable::Mapper.include?(Resources)
   end
 
   module Resources

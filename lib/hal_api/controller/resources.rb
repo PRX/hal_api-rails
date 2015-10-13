@@ -32,7 +32,7 @@ module HalApi::Controller::Resources
     resource = instance_variable_get("@#{resource_name}")
     return resource if resource
     if params[:id]
-      self.resource = find_base.find(params[:id])
+      self.resource = find_base.send(self.class.find_method, params[:id])
     elsif request.post?
       self.resource = filtered(resources_base).build
     end
@@ -103,7 +103,7 @@ module HalApi::Controller::Resources
   end
 
   module ClassMethods
-    attr_accessor :resource_class, :resources_params, :resource_representer
+    attr_accessor :resource_class, :resources_params, :resource_representer, :find_method
 
     def filter_resources_by(*rparams)
       self.resources_params = rparams
@@ -113,8 +113,21 @@ module HalApi::Controller::Resources
       self.resource_representer = representer_class
     end
 
+    def find_method(new_method=nil)
+      if new_method.present?
+        @find_method = new_method
+      else
+        @find_method ||= :find
+      end
+    end
+
     def resource_class
-      @resource_class ||= controller_name.classify.constantize
+      @resource_class ||= controller_name.classify.constantize.tap do |klass|
+        unless klass.included_modules.include?(HalApi::RepresentedModel)
+          Rails.logger.debug("INCLUDING YO #{klass}")
+          klass.send(:include, HalApi::RepresentedModel)
+        end
+      end
     end
   end
 end
