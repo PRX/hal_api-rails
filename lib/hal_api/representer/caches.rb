@@ -3,6 +3,7 @@ require 'active_support/concern'
 # expects underlying model to have filename, class, and id attributes
 module HalApi::Representer::Caches
   extend ActiveSupport::Concern
+  require 'hal_api/representer/caches/serialized_json'
 
   # Pass in an option for the format this is going `to_`
   # used in caching the final string format of the obj
@@ -12,13 +13,13 @@ module HalApi::Representer::Caches
     super(options)
   end
 
-  def create_representation_with(doc, options, format)
-    cache.fetch(cache_key(represented, options), cache_options) do
-      response = super(doc, options, format)
-      response = HalApi::Representers::Caches::SerializedJson.new(JSON.dump(response)) if (options[:to_] == :json)
-      response
-    end
-  end
+  # def create_representation_with(doc, options, format)
+  #   cache.fetch(cache_key(represented, options), cache_options) do
+  #     response = super(doc, options, format)
+  #     response = HalApi::Representer::Caches::SerializedJson.new(JSON.dump(response)) if (options[:to_] == :json)
+  #     response
+  #   end
+  # end
 
   def cache_key(obj, options)
     key_components = [cache_key_class_name]

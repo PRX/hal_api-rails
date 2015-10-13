@@ -1,6 +1,6 @@
 # Wrapper for string that is already json
 # inspired by: http://grosser.it/2013/10/16/compiled-json-for-partially-cached-json-response-precompiled-handlebar-templates/
-class HalApi::Representers::Caches::SerializedJson
+class HalApi::Representer::Caches::SerializedJson
   def initialize(s); @s = s; end
   def to_json(*args); @s; end
   def to_s; @s; end
