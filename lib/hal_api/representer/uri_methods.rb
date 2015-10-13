@@ -13,13 +13,13 @@ module HalApi::Representer::UriMethods
       link(:self) do
         {
           href: self_url(represented),
-          profile: profile_url(represented)
+          profile: model_uri(represented)
         }
       end
     end
 
     def profile_link
-      link(:profile) { profile_url(represented) }
+      link(:profile) { model_uri(represented) }
     end
 
     def alternate_link
@@ -75,7 +75,7 @@ module HalApi::Representer::UriMethods
       part.to_s.dasherize
     else
       klass = part.is_a?(Class) ? part : (part.try(:item_class) || part.class)
-      if klass.respond_to?(:base_class) && (klass.superclass != BaseModel)
+      if klass.respond_to?(:base_class) && (klass.superclass != ActiveRecord::Base)
         base = klass.superclass.name.underscore.dasherize
         child = klass.name.underscore.gsub(/_#{base}$/, "").dasherize
         [base, child]

@@ -1,4 +1,5 @@
 require 'active_support/concern'
+require 'responders'
 require 'roar-rails'
 
 module HalApi::Controller
