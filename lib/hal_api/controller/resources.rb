@@ -31,11 +31,14 @@ module HalApi::Controller::Resources
   def resource
     resource = instance_variable_get("@#{resource_name}")
     return resource if resource
-    if params[:id]
-      self.resource = find_base.send(self.class.find_method, params[:id])
+
+    resource = if params[:id]
+      find_base.send(self.class.find_method, params[:id])
     elsif request.post?
-      self.resource = filtered(resources_base).build
+      filtered(resources_base).build
     end
+    raise HalApi::Errors::NotFound.new if resource.nil?
+    self.resource = resource
   end
 
   def resource=(res)
@@ -124,7 +127,6 @@ module HalApi::Controller::Resources
     def resource_class
       @resource_class ||= controller_name.classify.constantize.tap do |klass|
         unless klass.included_modules.include?(HalApi::RepresentedModel)
-          Rails.logger.debug("INCLUDING YO #{klass}")
           klass.send(:include, HalApi::RepresentedModel)
         end
       end
