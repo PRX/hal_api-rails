@@ -1,17 +1,25 @@
 require 'roar/json/hal'
 
 module HalApi::Errors
-  class UnsupportedMediaType < StandardError
+
+  class ApiError < StandardError
+    attr_accessor :status
+
+    def initialize(message = nil, status = 500)
+      super(message || "API Error")
+      self.status = status
+    end
+  end
+
+  class NotFound < ApiError
+    def initialize(message = nil)
+      super(message || "Resource Not Found", 404)
+    end
+  end
+
+  class UnsupportedMediaType < ApiError
     def initialize(type)
-      @type = type
-    end
-
-    def message
-      "Cannot consume unregistered media type '#{@type.inspect}'"
-    end
-
-    def status
-      415
+      super("Unsupported Media Type '#{type.inspect}'", 415)
     end
   end
 

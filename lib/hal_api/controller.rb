@@ -8,28 +8,28 @@ module HalApi::Controller
   require 'hal_api/controller/actions'
   require 'hal_api/controller/cache'
   require 'hal_api/controller/resources'
+  require 'hal_api/controller/exceptions'
 
   include HalApi::Controller::Actions
   include HalApi::Controller::Cache
   include HalApi::Controller::Resources
+  include HalApi::Controller::Exceptions
 
   included do
-    rescue_from HalApi::Errors::UnsupportedMediaType do |e|
-      respond_with e, status: e.status, represent_with: HalApi::Errors::Representer
-    end
+    include Roar::Rails::ControllerAdditions
 
     before_action :set_accepts
     respond_to :hal, :json
 
-    include Roar::Rails::ControllerAdditions
+    hal_rescue_standard_errors
   end
 
   module ClassMethods
     include HalApi::Controller::Actions::ClassMethods
     include HalApi::Controller::Cache::ClassMethods
     include HalApi::Controller::Resources::ClassMethods
+    include HalApi::Controller::Exceptions::ClassMethods
   end
-
 
   private
 

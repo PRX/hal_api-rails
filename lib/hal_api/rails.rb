@@ -8,7 +8,7 @@ module HalApi::Rails
 
   # roar fix for 4.1
   # https://github.com/apotonick/roar-rails/issues/65
-  ActionController.add_renderer :hal do |js, options|
+  ::ActionController::Renderers.add :hal do |js, options|
     self.content_type ||= Mime::HAL
     js.to_json
   end
