@@ -55,7 +55,7 @@ module HalApi::Controller::Actions
   end
 
   def valid_params_for_action(action)
-    (params.slice(*self.class.valid_params_list(action)) || {}).tap do |p|
+    (params.permit(*self.class.valid_params_list(action)) || {}).tap do |p|
       p[:zoom] = zoom_param if zoom_param
     end
   end
