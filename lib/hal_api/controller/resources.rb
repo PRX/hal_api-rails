@@ -14,10 +14,14 @@ module HalApi::Controller::Resources
 
   def show_resource
     resource
+  rescue ::ActiveRecord::RecordNotFound
+    raise HalApi::Errors::NotFound.new
   end
 
   def update_resource
     resource
+  rescue ::ActiveRecord::RecordNotFound
+    raise HalApi::Errors::NotFound.new
   end
 
   def create_resource
@@ -26,6 +30,8 @@ module HalApi::Controller::Resources
 
   def destroy_resource
     resource
+  rescue ::ActiveRecord::RecordNotFound
+    raise HalApi::Errors::NotFound.new
   end
 
   def resource

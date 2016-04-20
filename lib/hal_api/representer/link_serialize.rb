@@ -13,8 +13,8 @@ module HalApi::Representer::LinkSerialize
 
     def set_link_property(options)
       if options.is_a?(Hash) && (options.delete(:writeable) || options[:reader])
-        name   = options[:rel].to_s.split(':').last.split('/').last
-        pname  = "set_#{name}_uri"
+        name = options[:rel].to_s.split(':').last.split('/').last
+        pname = "set_#{name}_uri"
         reader = options.delete(:reader) || ->(doc, _args) do
           try("#{name}_id=", id_from_url(doc[pname])) if doc[pname]
         end

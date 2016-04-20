@@ -1,5 +1,4 @@
 # encoding: utf-8
-
 require 'active_support/concern'
 
 # expects underlying model to have filename, class, and id attributes
@@ -13,13 +12,13 @@ module HalApi::Representer::UriMethods
       link(:self) do
         {
           href: self_url(represented),
-          profile: model_uri(represented)
+          profile: profile_url(represented)
         }
       end
     end
 
     def profile_link
-      link(:profile) { model_uri(represented) }
+      link(:profile) { profile_url(represented) }
     end
 
     def alternate_link
@@ -57,7 +56,7 @@ module HalApi::Representer::UriMethods
     "http://#{self.class.profile_host}/model/#{joined_names(args)}"
   end
 
-  alias_method :profil_url, :model_uri
+  alias_method :profile_url, :model_uri
 
   def joined_names(args)
     (Array(args.map { |arg| model_uri_part_to_string(arg) }) +
@@ -67,7 +66,11 @@ module HalApi::Representer::UriMethods
   def model_uri_suffix(args)
     represented = args.last
     klass = represented.try(:item_decorator) || self.class
-    klass.name.deconstantize.underscore.dasherize.split('/')[1..-1] || []
+    find_model_name(klass).deconstantize.underscore.dasherize.split('/')[1..-1] || []
+  end
+
+  def find_model_name(klass)
+    klass.try(:name) || klass.ancestors.detect{|c| c.try(:name) }.name
   end
 
   def model_uri_part_to_string(part)
@@ -75,7 +78,7 @@ module HalApi::Representer::UriMethods
       part.to_s.dasherize
     else
       klass = part.is_a?(Class) ? part : (part.try(:item_class) || part.class)
-      if klass.respond_to?(:base_class) && (klass.superclass != ActiveRecord::Base)
+      if klass.respond_to?(:base_class) && (klass.superclass != ActiveRecord::Base) && !klass.superclass.abstract_class
         base = klass.superclass.name.underscore.dasherize
         child = klass.name.underscore.gsub(/_#{base}$/, "").dasherize
         [base, child]

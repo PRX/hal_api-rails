@@ -12,7 +12,7 @@ module HalApi::Controller::Actions
       consume_with_content_type! res
       hal_authorize res
       res.save!
-      respond_with root_resource(res), show_options
+      respond_with root_resource(res), create_options
     end
   end
 
@@ -42,6 +42,13 @@ module HalApi::Controller::Actions
   def index_options
     valid_params_for_action(:index).tap do |options|
       options[:_keys] = options.keys
+      options[:represent_with] = Api::PagedCollectionRepresenter
+    end
+  end
+
+  def create_options
+    show_options.tap do |options|
+      options[:location] = ''
     end
   end
 
