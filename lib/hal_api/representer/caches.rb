@@ -13,6 +13,7 @@ module HalApi::Representer::Caches
     super(options)
   end
 
+  # This isn't working, comment out this optimization
   # def create_representation_with(doc, options, format)
   #   cache.fetch(cache_key(represented, options), cache_options) do
   #     response = super(doc, options, format)
