@@ -6,10 +6,8 @@ module HalApi::Rails
 
   Mime::Type.register 'application/hal+json', :hal
 
-  # roar fix for 4.1
-  # https://github.com/apotonick/roar-rails/issues/65
-  ::ActionController::Renderers.add :hal do |js, options|
-    self.content_type ||= Mime::HAL
-    js.to_json
+  ::ActionController::Renderers.add :hal do |obj, options|
+    self.content_type ||= Mime[:hal]
+    obj
   end
 end
