@@ -5,7 +5,7 @@ require 'hal_api/representer/link_serialize'
 
 describe HalApi::Representer::LinkSerialize do
 
-  it 'sets a default curie' do
+  it 'adds a property to set a linked resource' do
 
     class TestRepresenter < Roar::Decorator
       include Roar::JSON::HAL
