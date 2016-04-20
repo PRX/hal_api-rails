@@ -1,4 +1,6 @@
+# encoding: utf-8
 require 'active_support/concern'
+require 'hal_api/paged_collection'
 
 # expects underlying model to have filename, class, and id attributes
 module HalApi::Representer::Embeds
@@ -61,14 +63,12 @@ module HalApi::Representer::Embeds
           no_curies: true,
           item_class: options.delete(:item_class),
           url: options.delete(:url),
-          item_decorator: options.delete(:item_decorator),
-          per: options.delete(:per) || Kaminari.config.default_per_page
+          item_decorator: options.delete(:item_decorator)
         }
+        getter_per = options.delete(:per) || Kaminari.config.default_per_page
         options[:getter] ||= ->(*) do
-          # set # per page based on default, option value integer, or special :all
-          per = opts.delete(:per)
-          per = self.send(name).count if per == :all
-          PagedCollection.new(self.send(name).page(1).per(per), nil, opts.merge({parent: self}))
+          per = getter_per == :all ? send(name).count : getter_per
+          HalApi::PagedCollection.new(send(name).page(1).per(per), nil, opts.merge(parent: self))
         end
         options[:decorator] = Api::PagedCollectionRepresenter
       end
