@@ -1,6 +1,5 @@
 # encoding: utf-8
 require 'test_helper'
-require 'pundit'
 
 module ActiveRecord
   class RecordNotFound < StandardError
@@ -42,7 +41,6 @@ describe HalApi::Controller::Actions do
 
   class FoosController < ActionController::Base
     include HalApi::Controller::Actions
-    include Pundit
 
     cattr_accessor :_caches_action
 
@@ -120,15 +118,15 @@ describe HalApi::Controller::Actions do
       controller._respond_with.last[:_keys].must_equal []
     end
 
-    # it 'can adds paging to resources query' do
+    it 'authorizes the resource' do
+      controller.stub(:authorize, true) do
+        assert_send([controller, :authorize, {}])
+      end
+    end
+
+    # it 'can add paging to resources query' do
     #   arel = FoosController.new.send(:paged, Account.where('id is not null'))
     #   arel.to_sql.must_match /LIMIT 10 OFFSET 0/
-    # end
-
-    # it 'authorizes the resource' do
-    #   controller.stub(:authorize, true) do
-    #     assert_send([controller, :authorize, account])
-    #   end
     # end
   end
 
