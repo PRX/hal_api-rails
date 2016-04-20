@@ -17,7 +17,7 @@ module HalApi::Controller::Exceptions
   end
 
   def log_error(env, wrapper)
-    logger = env['action_dispatch.logger'] || ActiveSupport::Logger.new($stderr)
+    logger = env['action_dispatch.logger'] || self.logger || ActiveSupport::Logger.new($stderr)
     return unless logger
 
     exception = wrapper.exception
