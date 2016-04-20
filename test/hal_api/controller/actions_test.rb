@@ -57,7 +57,7 @@ describe HalApi::Controller::Actions do
     end
 
     def current_user
-      FactoryGirl.create(:user)
+      # FactoryGirl.create(:user)
     end
 
     def respond_with(*args)
@@ -71,6 +71,9 @@ describe HalApi::Controller::Actions do
   end
 
   let (:controller) { FoosController.new }
+  # stubbing out ActiveRecord dependant code
+  # TODO: figure out how to make these test work without it
+  #   or actually add in AR test models to test this.
   # let (:account) { create(:account) }
 
   describe 'errors' do
