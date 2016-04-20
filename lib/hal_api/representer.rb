@@ -1,6 +1,12 @@
 # encoding: utf-8
 
 class HalApi::Representer < Roar::Decorator
+  include Roar::Hypermedia
+  include Roar::JSON::HAL
+  include Roar::JSON::HAL::Links
+  include Roar::JSON
+  require 'roar/rails/hal'
+
   require 'hal_api/representer/caches'
   require 'hal_api/representer/curies'
   require 'hal_api/representer/embeds'
@@ -8,7 +14,6 @@ class HalApi::Representer < Roar::Decorator
   require 'hal_api/representer/link_serialize'
   require 'hal_api/representer/uri_methods'
 
-  include Roar::JSON::HAL
   include HalApi::Representer::FormatKeys
   include HalApi::Representer::UriMethods
   include HalApi::Representer::Curies
