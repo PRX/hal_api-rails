@@ -10,6 +10,19 @@ class TestUriMethods
   include HalApi::Representer::UriMethods
 end
 
+class BaseModelTest
+  def self.base_class; Class; end
+end
+
+class Widget < BaseModelTest
+end
+
+class VerySpecialThing < Widget
+end
+
+class SpecialWidget < Widget
+end
+
 describe HalApi::Representer::UriMethods do
 
   let(:helper) { TestUriMethods.new }
@@ -45,6 +58,11 @@ describe HalApi::Representer::UriMethods do
     helper.model_uri(:test_object).must_equal uri
     helper.model_uri(TestObject).must_equal uri
     helper.model_uri(t_object).must_equal uri
+
+    b = "http://meta.test.dev/model"
+    helper.model_uri(Widget.new).must_equal "#{b}/widget"
+    helper.model_uri(SpecialWidget.new).must_equal "#{b}/widget/special"
+    helper.model_uri(VerySpecialThing.new).must_equal "#{b}/widget/very-special-thing"
   end
 
   it 'returns the meta host' do
