@@ -78,10 +78,10 @@ module HalApi::Representer::UriMethods
       part.to_s.dasherize
     else
       klass = part.is_a?(Class) ? part : (part.try(:item_class) || part.class)
-      if klass.respond_to?(:base_class) && (klass.superclass != ActiveRecord::Base) && !klass.superclass.abstract_class
-        base = klass.superclass.name.underscore.dasherize
-        child = klass.name.underscore.gsub(/_#{base}$/, "").dasherize
-        [base, child]
+      if klass.respond_to?(:base_class) && !klass.superclass.name.demodulize.starts_with?('Base')
+        parent = klass.superclass.name.underscore.dasherize
+        child = klass.name.underscore.gsub(/_#{parent}$/, "").dasherize
+        [parent, child]
       else
         klass.name.underscore.dasherize
       end
