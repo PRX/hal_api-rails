@@ -25,22 +25,6 @@ TestObject = Struct.new(:title, :is_root_resource) do
   end
 end
 
-TestParent = Struct.new(:id, :is_root_resource) do
-  extend ActiveModel::Naming
-
-  def persisted?
-    false
-  end
-
-  def to_model
-    self
-  end
-
-  def to_param
-    "#{id}"
-  end
-end
-
 module Api
 
   class BaseRepresenter < HalApi::Representer
