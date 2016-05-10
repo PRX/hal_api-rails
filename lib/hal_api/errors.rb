@@ -1,5 +1,3 @@
-require 'roar/json/hal'
-
 module HalApi::Errors
 
   class ApiError < StandardError
