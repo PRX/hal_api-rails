@@ -9,7 +9,7 @@ module HalApi::Controller::Actions
 
   def create
     create_resource.tap do |res|
-      consume_with_content_type! res
+      consume_with_content_type! res, create_options
       hal_authorize res
       res.save!
       respond_with root_resource(res), create_options
@@ -18,7 +18,7 @@ module HalApi::Controller::Actions
 
   def update
     update_resource.tap do |res|
-      consume_with_content_type! res
+      consume_with_content_type! res, show_options
       hal_authorize res
       res.save!
       respond_with root_resource(res), show_options
