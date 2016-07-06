@@ -1,3 +1,5 @@
+require 'roar-rails'
+
 module HalApi::Errors
 
   class ApiError < StandardError

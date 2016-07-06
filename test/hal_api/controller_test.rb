@@ -69,7 +69,7 @@ describe HalApi::Controller do
     it 'handles invalid content type errors' do
       lambda do
         controller.create
-      end.must_raise HalApi::Errors::UnsupportedMediaType
+      end.must_raise Roar::Rails::UnsupportedMediaType
     end
   end
 
