@@ -9,7 +9,7 @@ module HalApi::Controller::Actions
 
   def create
     create_resource.tap do |res|
-      consume_with_content_type! res
+      consume! res, create_options
       hal_authorize res
       res.save!
       respond_with root_resource(res), create_options
@@ -18,7 +18,7 @@ module HalApi::Controller::Actions
 
   def update
     update_resource.tap do |res|
-      consume_with_content_type! res
+      consume! res, show_options
       hal_authorize res
       res.save!
       respond_with root_resource(res), show_options
@@ -77,23 +77,6 @@ module HalApi::Controller::Actions
 
   def root_resource(resource)
     resource.tap { |res| res.is_root_resource = true }
-  end
-
-  # TODO: Remove this method when we upgrade roar-rails
-  # Background: https://github.com/apotonick/roar-rails/blob/a109b40/lib/roar/rails/controller_additions.rb#L27
-  def consume_with_content_type!(model, options = {})
-    type = request.content_type
-    format = Mime::Type.lookup(type).try(:symbol)
-
-    if format.blank?
-      raise HalApi::Errors::UnsupportedMediaType.new(type)
-    end
-
-    parse_method = compute_parsing_method(format)
-    representer = prepare_model_for(format, model, options)
-
-    representer.send(parse_method, incoming_string, options)
-    model
   end
 
   def hal_authorize(resource)
