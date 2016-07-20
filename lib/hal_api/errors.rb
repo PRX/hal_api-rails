@@ -28,5 +28,6 @@ module HalApi::Errors
 
     property :status
     property :message
+    property :backtrace, if: -> (*) { Rails.configuration.try(:consider_all_requests_local) }
   end
 end

@@ -8,10 +8,18 @@ module HalApi::Controller::Exceptions
     wrapper = ::ActionDispatch::ExceptionWrapper.new(env, exception)
     log_error(env, wrapper)
 
-    error = exception.is_a?(HalApi::Errors::ApiError) ? exception : HalApi::Errors::ApiError.new
+    error = if exception.is_a?(HalApi::Errors::ApiError)
+              exception
+            else
+              e = HalApi::Errors::ApiError.new(exception.message)
+              e.set_backtrace(exception.backtrace)
+              e
+            end
+
     respond_with(
       error,
       status: error.status,
+      location: nil, # for POST requests
       represent_with: HalApi::Errors::Representer
     )
   end
