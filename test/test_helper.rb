@@ -1,6 +1,5 @@
 $LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
 require "action_controller/railtie"
-# require "action_controller/test_case"
 require "action_view/railtie"
 require 'active_support/all'
 
