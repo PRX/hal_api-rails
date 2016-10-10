@@ -80,14 +80,14 @@ module HalApi::Controller::Actions
   end
 
   def hal_authorize(resource)
-    if respond_to?(:authorize)
-      authorize(resource)
-    else
-      define_singleton_method(:authorize, Proc.new(resource) do
+    if !respond_to?(:authorize)
+      define_singleton_method(:authorize) do |_resource|
         true
-      end)
+      end
       singleton_class.send(:alias_method, :hal_authorize, :authorize)
     end
+
+    authorize(resource)
   end
 
 
