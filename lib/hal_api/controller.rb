@@ -24,13 +24,6 @@ module HalApi::Controller
     hal_rescue_standard_errors
   end
 
-  module ClassMethods
-    include HalApi::Controller::Actions::ClassMethods
-    include HalApi::Controller::Cache::ClassMethods
-    include HalApi::Controller::Resources::ClassMethods
-    include HalApi::Controller::Exceptions::ClassMethods
-  end
-
   private
 
   def set_accepts

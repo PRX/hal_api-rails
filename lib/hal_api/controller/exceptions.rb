@@ -4,6 +4,8 @@ require 'action_dispatch/middleware/exception_wrapper'
 # Since we are taking over exception handling, make sure we log exceptions
 # https://github.com/rails/rails/blob/4-2-stable/actionpack/lib/action_dispatch/middleware/debug_exceptions.rb
 module HalApi::Controller::Exceptions
+  extend ActiveSupport::Concern
+
   def respond_with_error(exception)
     wrapper = ::ActionDispatch::ExceptionWrapper.new(env, exception)
     log_error(env, wrapper)

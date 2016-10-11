@@ -1,4 +1,5 @@
 module HalApi::Controller::Resources
+  extend ActiveSupport::Concern
   private
 
   # action specific resources
