@@ -1,4 +1,12 @@
 module HalApi::Controller::Actions
+  extend ActiveSupport::Concern
+
+  included do
+    class_eval do
+      class_attribute :valid_params
+    end
+  end
+
   def index
     respond_with index_collection, index_options
   end
@@ -92,8 +100,6 @@ module HalApi::Controller::Actions
 
 
   module ClassMethods
-    attr_accessor :valid_params
-
     def allow_params(action, *params)
       self.valid_params ||= {}
       valid_params[action.to_sym] = Array(params).flatten
