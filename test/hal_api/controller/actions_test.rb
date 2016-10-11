@@ -119,9 +119,9 @@ describe HalApi::Controller::Actions do
     end
 
     it 'authorizes the resource' do
-      controller.stub(:authorize, true) do
-        assert_send([controller, :authorize, {}])
-      end
+      controller.wont_be :respond_to?, :authorize
+      assert_send([controller, :hal_authorize, {}])
+      controller.must_be :respond_to?, :authorize
     end
 
     # it 'can add paging to resources query' do
@@ -151,6 +151,10 @@ describe HalApi::Controller::Actions do
 
       FoosController.valid_params.must_equal(index: [:page, :per, :zoom])
       FoosController.valid_params_list(:index).must_equal([:page, :per, :zoom])
+
+      class ChildFoosController < FoosController; end
+      ChildFoosController.valid_params.must_equal(index: [:page, :per, :zoom])
+      ChildFoosController.valid_params_list(:index).must_equal([:page, :per, :zoom])
     end
 
     it 'sets default cache options' do

@@ -1,4 +1,6 @@
 module HalApi::Controller::Cache
+  extend ActiveSupport::Concern
+
   private
 
   def index_cache_path

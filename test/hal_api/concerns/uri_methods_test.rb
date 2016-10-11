@@ -3,11 +3,18 @@ require 'test_helper'
 require 'test_models'
 
 class TestUriMethods
-  def self.alternate_host; "www.test.dev"; end
-
-  def self.profile_host; "meta.test.dev"; end
-
   include HalApi::Representer::UriMethods
+  def self.alternate_host; "www.test.dev"; end
+  def self.profile_host; "meta.test.dev"; end
+end
+
+class AltTestUriMethods
+  include HalApi::Representer::UriMethods
+  self.alternate_host = "alt.www.test.dev"
+  self.profile_host = "alt.meta.test.dev"
+end
+
+class ChildTestUriMethods < AltTestUriMethods
 end
 
 class BaseModelTest
@@ -26,6 +33,9 @@ end
 describe HalApi::Representer::UriMethods do
 
   let(:helper) { TestUriMethods.new }
+  let(:alt_helper) { AltTestUriMethods.new }
+  let(:child_helper) { ChildTestUriMethods.new }
+
   let(:t_object) { TestObject.new("test", true) }
   let(:representer) { Api::TestObjectRepresenter.new(t_object) }
 
@@ -63,6 +73,16 @@ describe HalApi::Representer::UriMethods do
     helper.model_uri(Widget.new).must_equal "#{b}/widget"
     helper.model_uri(SpecialWidget.new).must_equal "#{b}/widget/special"
     helper.model_uri(VerySpecialThing.new).must_equal "#{b}/widget/very-special-thing"
+  end
+
+  it 'sets host uri attributes for parent' do
+    alt_uri = "http://alt.meta.test.dev/model/test-object"
+    alt_helper.model_uri('test_object').must_equal alt_uri
+    child_helper.model_uri('test_object').must_equal alt_uri
+
+    alt_b = "http://alt.meta.test.dev/model"
+    alt_helper.model_uri(Widget.new).must_equal "#{alt_b}/widget"
+    child_helper.model_uri(Widget.new).must_equal "#{alt_b}/widget"
   end
 
   it 'returns the meta host' do

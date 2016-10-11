@@ -1,4 +1,12 @@
 module HalApi::Controller::Actions
+  extend ActiveSupport::Concern
+
+  included do
+    class_eval do
+      class_attribute :valid_params
+    end
+  end
+
   def index
     respond_with index_collection, index_options
   end
@@ -80,20 +88,18 @@ module HalApi::Controller::Actions
   end
 
   def hal_authorize(resource)
-    if respond_to?(:authorize)
-      authorize(resource)
-    else
-      define_singleton_method(:authorize, Proc.new(resource) do
+    if !respond_to?(:authorize)
+      define_singleton_method(:authorize) do |_resource|
         true
-      end)
+      end
       singleton_class.send(:alias_method, :hal_authorize, :authorize)
     end
+
+    authorize(resource)
   end
 
 
   module ClassMethods
-    attr_accessor :valid_params
-
     def allow_params(action, *params)
       self.valid_params ||= {}
       valid_params[action.to_sym] = Array(params).flatten

@@ -5,9 +5,13 @@ require 'active_support/concern'
 module HalApi::Representer::UriMethods
   extend ActiveSupport::Concern
 
-  module ClassMethods
-    attr_accessor :profile_host, :alternate_host
+  included do
+    class_eval do
+      class_attribute :profile_host, :alternate_host
+    end
+  end
 
+  module ClassMethods
     def self_link
       link(:self) do
         {

@@ -53,10 +53,6 @@ describe HalApi::Controller do
       self._respond_with = args
     end
 
-    def authorize(resource)
-      true
-    end
-
     def self.caches_action(action, options = {})
       self._caches_action ||= {}
       self._caches_action[action] = options
@@ -103,9 +99,8 @@ describe HalApi::Controller do
     end
 
     it 'authorizes the resource' do
-      controller.stub(:authorize, true) do
-        assert_send([controller, :authorize])
-      end
+      assert_send([controller, :hal_authorize, {}])
+      assert_send([controller, :authorize, {}])
     end
   end
 
