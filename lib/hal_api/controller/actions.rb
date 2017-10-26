@@ -50,7 +50,7 @@ module HalApi::Controller::Actions
   def index_options
     valid_params_for_action(:index).tap do |options|
       options[:_keys] = options.keys
-      options[:represent_with] = Api::PagedCollectionRepresenter
+      options[:represent_with] = HalApi::PagedCollection.representer
     end
   end
 
@@ -77,8 +77,8 @@ module HalApi::Controller::Actions
 
   def zoom_param
     @zoom_param ||= begin
-      if (zp = params[:zoom]) && zp.present?
-        zp.split(',').map(&:strip).compact.sort
+      if (zp = params[:zoom]) && !zp.nil?
+        Array(zp.split(',')).map(&:strip).compact.sort
       end
     end
   end

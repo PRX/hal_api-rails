@@ -15,6 +15,10 @@ module HalApi::RepresentedModel
     is_root_resource
   end
 
+  def id_from_url(url)
+    Rails.application.routes.recognize_path(url)[:id]
+  end
+
   included do
     extend ActiveModel::Naming unless (method(:model_name) rescue nil)
   end

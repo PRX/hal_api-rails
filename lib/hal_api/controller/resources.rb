@@ -82,15 +82,12 @@ module HalApi::Controller::Resources
   # Decorations
 
   def decorate_query(res)
-    filtered(paged(sorted(scoped(res))))
+    filtered(paged(sorted(scoped(included(res)))))
   end
 
   def filtered(arel)
     keys = self.class.resources_params || []
     where_hash = params.slice(*keys)
-    if where_hash.key?('story_id')
-      where_hash['piece_id'] = where_hash.delete('story_id')
-    end
     where_hash = where_hash.permit(where_hash.keys)
     arel = arel.where(where_hash) unless where_hash.blank?
     arel

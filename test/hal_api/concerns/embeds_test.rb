@@ -13,7 +13,7 @@ describe HalApi::Representer::Embeds do
   let(:helper) { class TestUriMethods; include Embeds; end.new }
   let(:t_object) { TestObject.new("test", true) }
   let(:mapper) { TestEmbedsMapper.new.tap { |m| m.represented = t_object } }
-  let(:binding) { Struct.new(:as, :embedded, :zoom).new('t:test', true, nil) }
+  let(:binding) { Struct.new(:as, :embedded, :zoom).new(TestOption.new('t:test'), true, nil) }
 
   describe "non embedded property" do
     let (:non_embed_binding) { binding.tap{|b| b.embedded = false } }

@@ -13,6 +13,12 @@ class HalApi::PagedCollection
 
   def_delegators :request, :params
 
+  class_attribute :representer_class
+
+  def self.representer
+    representer_class || HalApi::PagedCollectionRepresenter
+  end
+
   def to_model
     self
   end

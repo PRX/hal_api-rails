@@ -1,4 +1,3 @@
-# encoding: utf-8
 require 'active_support/concern'
 require 'hal_api/paged_collection'
 
@@ -10,15 +9,24 @@ module HalApi::Representer::Embeds
     Representable::Mapper.send(:include, Resources) if !Representable::Mapper.include?(Resources)
   end
 
+  def normalize_options!(options)
+    propagated_options, private_options = super(options)
+
+    # we want this to propogate, and be available for `skip_property?`, so don't delete
+    private_options[:zoom] = options[:zoom] if options.key?(:zoom)
+
+    [propagated_options, private_options]
+  end
+
   module Resources
 
-    def skip_property?(binding, options)
-      super(binding, options) || suppress_embed?(binding, options)
+    def skip_property?(binding, private_options)
+      super(binding, private_options) || suppress_embed?(binding, private_options)
     end
 
     # embed if zoomed
     def suppress_embed?(binding, options)
-      name     = (binding[:as] || binding.name).to_s
+      name = binding[:as].evaluate(self).to_s || binding.name
       embedded = !!binding[:embedded]
 
       # not embedded, return false - nothing to suppress
@@ -28,7 +36,7 @@ module HalApi::Representer::Embeds
       !embed_zoomed?(name, binding[:zoom], options[:zoom])
     end
 
-    def embed_zoomed?(name, zoom_def=nil, zoom_param=nil)
+    def embed_zoomed?(name, zoom_def = nil, zoom_param = nil)
       # if the embed in the representer definition has `zoom: :always` defined
       # always embed it, even if it is in another embed
       # (this is really meant for collections where embedded items must be included)
@@ -70,7 +78,7 @@ module HalApi::Representer::Embeds
           per = getter_per == :all ? send(name).count : getter_per
           HalApi::PagedCollection.new(send(name).page(1).per(per), nil, opts.merge(parent: self))
         end
-        options[:decorator] = Api::PagedCollectionRepresenter
+        options[:decorator] = HalApi::PagedCollection.representer
       end
 
       property(name, options)

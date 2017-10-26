@@ -25,6 +25,32 @@ TestObject = Struct.new(:title, :is_root_resource) do
   end
 end
 
+TestParent = Struct.new(:id, :is_root_resource) do
+  extend ActiveModel::Naming
+
+  def persisted?
+    false
+  end
+
+  def to_model
+    self
+  end
+
+  def to_param
+    "#{id}"
+  end
+end
+
+class TestOption
+  def initialize(v)
+    @value = v
+  end
+
+  def evaluate(c = nil)
+    @value
+  end
+end
+
 module Api
 
   class BaseRepresenter < HalApi::Representer
@@ -54,6 +80,10 @@ module Api
     end
   end
 
+  class Api::TestParentRepresenter < BaseRepresenter
+    property :id
+  end
+#
   module Min
     class TestObjectRepresenter < BaseRepresenter
       property :title
@@ -74,6 +104,22 @@ module Api
 
     def resource
       @resource ||= TestObject.new('title', true)
+    end
+
+    def parent
+      @parent ||= TestParent.new(1, true)
+    end
+  end
+
+  class Api::TestParentsController < ActionController::Base
+    def index; head :no_content; end
+    def show; head :no_content; end
+    def create; head :no_content; end
+    def update; head :no_content; end
+    def destroy; head :no_content; end
+
+    def resource
+      @resource ||= TestParent.new(1, true)
     end
   end
 end
