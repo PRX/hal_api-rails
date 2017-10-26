@@ -24,7 +24,51 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+This gem provides a number of additions to the `roar` gem HAL support.
+
+There are several parts of it that need to be used in your apps:
+
+1) Add to your API controllers:
+
+```ruby
+require 'hal_api/rails'
+
+class Api::BaseController < ApplicationController
+  include HalApi::Controller
+  ...
+end
+```
+
+2) Add to your `ActiveRecord` models used in your API (perhaps in a base model class):
+```ruby
+class BaseModel < ActiveRecord::Base
+  self.abstract_class = true
+
+  include RepresentedModel
+end
+```
+
+3) Use the base representer, define your own CURIEs:
+```ruby
+class Api::BaseRepresenter < HalApi::Representer
+  curies(:prx) do
+    [{
+      name: :foo,
+      href: "http://foo.bar/relation/{rel}",
+      templated: true
+    }]
+  end
+
+  def index_url_params
+    '{?page,per,zoom}'
+  end
+
+  def show_url_params
+    '{?zoom}'
+  end
+end
+```
+
 
 ## Development
 
