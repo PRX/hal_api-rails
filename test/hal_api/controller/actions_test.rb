@@ -1,5 +1,6 @@
 # encoding: utf-8
 require 'test_helper'
+require 'hal_api/paged_collection_representer'
 
 module ActiveRecord
   class RecordNotFound < StandardError
@@ -39,12 +40,17 @@ describe HalApi::Controller::Actions do
   class FooRepresenter
   end
 
+  class FooPagedCollectionRepresenter < HalApi::PagedCollectionRepresenter
+  end
+
   class FoosController < ActionController::Base
     include HalApi::Controller::Actions
 
     cattr_accessor :_caches_action
 
     attr_accessor :_respond_with, :request, :params
+
+    collection_representer FooPagedCollectionRepresenter
 
     def params
       @params ||= ActionController::Parameters.new(action: 'update', id: 1)
@@ -165,6 +171,10 @@ describe HalApi::Controller::Actions do
     it 'caches api actions' do
       FoosController.cache_api_action(:index, bar: true)
       FoosController._caches_action[:index][:bar].must_equal true
+    end
+
+    it 'knows which collection representer' do
+      FoosController.collection_representer_class.must_equal FooPagedCollectionRepresenter
     end
   end
 end
