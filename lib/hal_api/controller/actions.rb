@@ -77,8 +77,8 @@ module HalApi::Controller::Actions
 
   def zoom_param
     @zoom_param ||= begin
-      if (zp = params[:zoom]) && zp.present?
-        zp.split(',').map(&:strip).compact.sort
+      if (zp = params[:zoom]) && !zp.nil?
+        Array(zp.split(',')).map(&:strip).compact.sort
       end
     end
   end
