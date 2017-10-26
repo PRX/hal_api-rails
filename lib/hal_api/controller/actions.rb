@@ -3,7 +3,7 @@ module HalApi::Controller::Actions
 
   included do
     class_eval do
-      class_attribute :valid_params, :collection_representer_class
+      class_attribute :valid_params
     end
   end
 
@@ -50,8 +50,7 @@ module HalApi::Controller::Actions
   def index_options
     valid_params_for_action(:index).tap do |options|
       options[:_keys] = options.keys
-      rc = self.class.collection_representer_class || HalApi::PagedCollectionRepresenter
-      options[:represent_with] = rc
+      options[:represent_with] = HalApi::PagedCollection.representer
     end
   end
 
@@ -101,10 +100,6 @@ module HalApi::Controller::Actions
 
 
   module ClassMethods
-    def collection_representer(rep)
-      self.collection_representer_class = rep
-    end
-
     def allow_params(action, *params)
       self.valid_params ||= {}
       valid_params[action.to_sym] = Array(params).flatten
