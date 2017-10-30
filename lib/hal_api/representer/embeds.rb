@@ -75,8 +75,14 @@ module HalApi::Representer::Embeds
         }
         getter_per = options.delete(:per) || Kaminari.config.default_per_page
         options[:getter] ||= ->(*) do
-          per = getter_per == :all ? send(name).count : getter_per
-          HalApi::PagedCollection.new(send(name).page(1).per(per), nil, opts.merge(parent: self))
+          cnt = send(name).count
+          per = getter_per == :all ? cnt : getter_per
+          if cnt <= per
+            items = Kaminari.paginate_array(send(name)).page(1).per(per)
+          else
+            items = send(name).page(1).per(per)
+          end
+          HalApi::PagedCollection.new(items, nil, opts.merge(parent: self))
         end
         options[:decorator] = HalApi::PagedCollection.representer
       end
