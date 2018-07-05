@@ -30,13 +30,6 @@ describe HalApi::Controller::Exceptions < ActionController::TestCase do
     @request = ActionController::TestRequest.new
     @response = ActionController::TestResponse.new
     @routes = TestRoutes.new
-    module NewRelic; end
-    module NewRelic::Agent
-      attr_accessor :noticed_error
-      def self.notice_error(e)
-        raise NameError.new('pretend i don\'t exist')
-      end
-    end
   end
 
   it 'rescues from standard errors' do
@@ -65,23 +58,38 @@ describe HalApi::Controller::Exceptions < ActionController::TestCase do
     response.headers['Location'].must_be_nil
   end
 
-  it 'notices 500 errors if newrelic exists' do
-    notice = MiniTest::Mock.new
-    notice.expect :call, nil do |err|
-      err.message == 'what now'
-    end
-    NewRelic::Agent.stub :notice_error, notice do
-      get :throwerror, {format: :hal}
-      response.status.must_equal 500
-      notice.verify
-    end
-  end
+  describe 'with new relic defined' do
 
-  it 'does not notice 400 errors' do
-    notice = -> { raise StandardError.new('should not have called this') }
-    NewRelic::Agent.stub :notice_error, notice do
-      get :thrownotfound, {format: :hal}
-      response.status.must_equal 404
+    before do
+      module NewRelic; end
+      module NewRelic::Agent
+        def self.notice_error; end
+      end
     end
+
+    after do
+      Object.send(:remove_const, :NewRelic)
+    end
+
+    it 'notices 500 errors if newrelic exists' do
+      notice = MiniTest::Mock.new
+      notice.expect :call, nil do |err|
+        err.message == 'what now'
+      end
+      NewRelic::Agent.stub :notice_error, notice do
+        get :throwerror, {format: :hal}
+        response.status.must_equal 500
+        notice.verify
+      end
+    end
+
+    it 'does not notice 400 errors' do
+      notice = -> { raise StandardError.new('should not have called this') }
+      NewRelic::Agent.stub :notice_error, notice do
+        get :thrownotfound, {format: :hal}
+        response.status.must_equal 404
+      end
+    end
+
   end
 end

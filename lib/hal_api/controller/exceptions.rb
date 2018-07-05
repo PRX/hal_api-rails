@@ -45,9 +45,9 @@ module HalApi::Controller::Exceptions
   end
 
   def notice_error(error)
-    ::NewRelic::Agent.notice_error(error)
-  rescue NameError
-    # not loaded - ignore
+    if defined?(::NewRelic::Agent) && ::NewRelic::Agent.respond_to?(:notice_error)
+      ::NewRelic::Agent.notice_error(error)
+    end
   end
 
   module ClassMethods
