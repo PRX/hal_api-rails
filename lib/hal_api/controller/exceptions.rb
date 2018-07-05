@@ -17,6 +17,8 @@ module HalApi::Controller::Exceptions
       end
     end
 
+    notice_error(exception) if error.status >= 500
+
     respond_with(
       error,
       status: error.status,
@@ -39,6 +41,12 @@ module HalApi::Controller::Exceptions
       message << exception.annoted_source_code.to_s if exception.respond_to?(:annoted_source_code)
       message << "  " << trace.join("\n  ")
       logger.fatal("#{message}\n\n")
+    end
+  end
+
+  def notice_error(error)
+    if defined?(::NewRelic::Agent) && ::NewRelic::Agent.respond_to?(:notice_error)
+      ::NewRelic::Agent.notice_error(error)
     end
   end
 
