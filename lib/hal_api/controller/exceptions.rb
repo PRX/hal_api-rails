@@ -17,6 +17,8 @@ module HalApi::Controller::Exceptions
       end
     end
 
+    notice_error(error) if error.status >= 500
+
     respond_with(
       error,
       status: error.status,
@@ -40,6 +42,12 @@ module HalApi::Controller::Exceptions
       message << "  " << trace.join("\n  ")
       logger.fatal("#{message}\n\n")
     end
+  end
+
+  def notice_error(error)
+    ::NewRelic::Agent.notice_error(error)
+  rescue NameError
+    # not loaded - ignore
   end
 
   module ClassMethods
