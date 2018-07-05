@@ -71,7 +71,7 @@ describe HalApi::Controller::Exceptions < ActionController::TestCase do
       Object.send(:remove_const, :NewRelic)
     end
 
-    it 'notices 500 errors if newrelic exists' do
+    it 'notices 500 errors' do
       notice = MiniTest::Mock.new
       notice.expect :call, nil do |err|
         err.message == 'what now'
