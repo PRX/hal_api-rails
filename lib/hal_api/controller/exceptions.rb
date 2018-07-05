@@ -17,7 +17,7 @@ module HalApi::Controller::Exceptions
       end
     end
 
-    notice_error(error) if error.status >= 500
+    notice_error(exception) if error.status >= 500
 
     respond_with(
       error,
