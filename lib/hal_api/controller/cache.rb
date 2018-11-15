@@ -12,8 +12,19 @@ module HalApi::Controller::Cache
     ).cache_key
   end
 
+  def current_time
+    Datetime.now
+  end
+
   def show_cache_path
-    show_resource.updated_at.utc.to_i
+    timestamp = show_resource.updated_at || show_resource.created_at
+    timestamp = if timestamp.nil?
+                  # skip the cache
+                  current_time
+                else
+                  timestamp
+                end
+    timestamp.utc.to_i
   end
 
   module ClassMethods

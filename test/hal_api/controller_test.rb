@@ -6,7 +6,7 @@ describe HalApi::Controller do
   class Foo
     include ActiveModel::Model
 
-    attr_accessor :id, :is_root_resource, :updated_at
+    attr_accessor :id, :is_root_resource, :updated_at, :created_at
     cattr_accessor :_id
 
     self._id = 1
@@ -101,6 +101,31 @@ describe HalApi::Controller do
     it 'authorizes the resource' do
       assert_send([controller, :hal_authorize, {}])
       assert_send([controller, :authorize, {}])
+    end
+
+    describe "#show_cache_path" do
+      let(:some_foo) { Foo.find }
+
+      it "returns a path based on an updated_at timestamp" do
+        controller.send(:show_cache_path).must_equal 60
+      end
+
+      it "returns a path based on created_at if updated_at is nil" do
+        some_foo.updated_at = nil
+        some_foo.created_at = DateTime.parse('1970-01-01 00:00:30')
+        controller.stub(:resource, some_foo) do
+          controller.send(:show_cache_path).must_equal 30
+        end
+      end
+      it "uses the current time if update_at and created_at are nil" do
+        some_foo.updated_at = nil
+        some_foo.created_at = nil
+        controller.stub(:resource, some_foo) do
+          controller.stub(:current_time, DateTime.parse('1970-01-01 00:05:33')) do
+            controller.send(:show_cache_path).must_equal 333
+          end
+        end
+      end
     end
   end
 
