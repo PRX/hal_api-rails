@@ -27,6 +27,21 @@ module HalApi::Controller
   private
 
   def set_accepts
-    request.format = :json if request.format == Mime::HTML
+    mime_comparator = case HalApi::rails_major_version
+                      when 5
+                        Mime[:html]
+                      else
+                        Mime::HTML
+                      end
+    request.format = :json if request.format == mime_comparator
+  end
+
+  def env
+    case HalApi.rails_major_version
+    when 5
+      request.env
+    else
+      super
+    end
   end
 end
