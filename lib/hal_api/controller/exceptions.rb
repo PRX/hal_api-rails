@@ -7,7 +7,13 @@ module HalApi::Controller::Exceptions
   extend ActiveSupport::Concern
 
   def respond_with_error(exception)
-    wrapper = ::ActionDispatch::ExceptionWrapper.new(env, exception)
+    wrapper = case HalApi.rails_major_version
+              when 5
+                ::ActionDispatch::ExceptionWrapper.new(ActiveSupport::BacktraceCleaner.new, exception)
+              else
+                ::ActionDispatch::ExceptionWrapper.new(env, exception)
+              end
+
     log_error(env, wrapper)
 
     error = exception
