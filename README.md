@@ -13,6 +13,12 @@ Add this line to your application's Gemfile:
 gem 'hal_api-rails'
 ```
 
+Then add a gem for paging through ActiveRecord result sets:
+```ruby
+gem 'kaminari'
+```
+
+
 And then execute:
 
     $ bundle
