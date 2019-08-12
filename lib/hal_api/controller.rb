@@ -9,6 +9,7 @@ module HalApi::Controller
   require 'hal_api/controller/cache'
   require 'hal_api/controller/resources'
   require 'hal_api/controller/exceptions'
+  require 'hal_api/responders/api_responder'
 
   include HalApi::Controller::Actions
   include HalApi::Controller::Cache
@@ -22,6 +23,10 @@ module HalApi::Controller
     respond_to :hal, :json
 
     hal_rescue_standard_errors
+
+    def self.responder
+      HalApi::Responders::ApiResponder
+    end
   end
 
   private
