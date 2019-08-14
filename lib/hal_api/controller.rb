@@ -10,6 +10,7 @@ module HalApi::Controller
   require 'hal_api/controller/resources'
   require 'hal_api/controller/exceptions'
   require 'hal_api/controller/sorting'
+  require 'hal_api/controller/filtering'
   require 'hal_api/responders/api_responder'
 
   include HalApi::Controller::Actions
@@ -17,6 +18,7 @@ module HalApi::Controller
   include HalApi::Controller::Resources
   include HalApi::Controller::Exceptions
   include HalApi::Controller::Sorting
+  include HalApi::Controller::Filtering
 
   included do
     include Roar::Rails::ControllerAdditions

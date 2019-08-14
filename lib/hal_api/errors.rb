@@ -23,6 +23,15 @@ module HalApi::Errors
     end
   end
 
+  class UnknownFilterError < NoMethodError
+  end
+
+  class BadFilterValueError < ApiError
+    def initialize(msg)
+      super(msg, 400)
+    end
+  end
+
   module Representer
     include Roar::JSON::HAL
 
