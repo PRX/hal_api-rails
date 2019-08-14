@@ -99,8 +99,8 @@ describe HalApi::Controller do
     end
 
     it 'authorizes the resource' do
-      assert_send([controller, :hal_authorize, {}])
-      assert_send([controller, :authorize, {}])
+      assert controller.send(:hal_authorize, {})
+      assert controller.send(:authorize, {})
     end
 
     describe "#show_cache_path" do

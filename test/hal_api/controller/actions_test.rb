@@ -120,7 +120,7 @@ describe HalApi::Controller::Actions do
 
     it 'authorizes the resource' do
       controller.wont_be :respond_to?, :authorize
-      assert_send([controller, :hal_authorize, {}])
+      assert controller.send(:hal_authorize, {})
       controller.must_be :respond_to?, :authorize
     end
 
