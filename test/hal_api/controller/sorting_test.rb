@@ -6,7 +6,8 @@ describe HalApi::Controller::Sorting do
   class SortingTestController < ActionController::Base
     include HalApi::Controller::Sorting
 
-    sort_params default: { one: :desc }, allowed: [:one, :two, :three, :four, :five]
+    sort_params default: { one: :desc },
+                allowed: [:one, :two, :three, :four, :five, :camel_case]
 
     attr_accessor :sort_string
 
@@ -64,6 +65,17 @@ describe HalApi::Controller::Sorting do
 
   it 'ignores sorts that are not declared' do
     controller.sorts[5].must_be_nil
+  end
+
+  it 'allows camel case sorts' do
+    controller.sort_string = 'camel_case'
+    controller.sorts[0].keys.must_equal ['camel_case']
+
+    controller.sort_string = 'CamelCase'
+    controller.sorts[0].keys.must_equal ['camel_case']
+
+    controller.sort_string = 'camelCase'
+    controller.sorts[0].keys.must_equal ['camel_case']
   end
 
   it 'sorted adds orders to resources arel' do
