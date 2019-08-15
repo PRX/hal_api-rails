@@ -46,8 +46,14 @@ module HalApi::Controller::Sorting
       name, direction = str.split(':', 2).map { |s| s.to_s.strip }
       name = name.underscore
       direction = direction.blank? ? 'desc' : direction.downcase
-      next unless allowed_sorts.include?(name)
-      next unless ['asc', 'desc'].include?(direction)
+      unless allowed_sorts.include?(name)
+        hint = "Valid sorts are: #{allowed_sorts.join(' ')}"
+        raise HalApi::Errors::BadSortError.new("Invalid sort: #{name}", hint)
+      end
+      unless ['asc', 'desc'].include?(direction)
+        hint = "Valid directions are: asc desc"
+        raise HalApi::Errors::BadSortError.new("Invalid sort direction: #{direction}", hint)
+      end
       sorts_array << { name => direction }
     end
     sorts_array

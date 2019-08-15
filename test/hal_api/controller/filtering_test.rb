@@ -30,8 +30,10 @@ describe HalApi::Controller::Filtering do
     controller.filters.two.must_equal true
     err = assert_raises { controller.filters.foo }
     err.must_be_instance_of(HalApi::Errors::UnknownFilterError)
+    err.hint.must_match /valid filters are: one two/i
     err = assert_raises { controller.filters.whatever }
     err.must_be_instance_of(HalApi::Errors::UnknownFilterError)
+    err.hint.must_match /valid filters are: one two/i
   end
 
   it 'provides boolean testers' do

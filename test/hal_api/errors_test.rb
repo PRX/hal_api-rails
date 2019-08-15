@@ -3,7 +3,7 @@ require 'test_helper'
 describe HalApi::Errors do
 
   describe HalApi::Errors::ApiError do
-    let(:subject) { HalApi::Errors::ApiError.new('foo') }
+    let(:subject) { HalApi::Errors::ApiError.new('foo', nil, 'bar') }
 
     it 'has status 500' do
       subject.status.must_equal 500
@@ -11,6 +11,10 @@ describe HalApi::Errors do
 
     it 'has a helpful message' do
       subject.message.must_equal 'foo'
+    end
+
+    it 'has a helpful hint' do
+      subject.hint.must_equal 'bar'
     end
   end
 

@@ -19,7 +19,9 @@ module HalApi::Controller::Filtering
       elsif m.to_s[-1] == '?' && args.empty? && @filters.key?(m.to_s.chop)
         !!@filters[m.to_s.chop]
       else
-        raise HalApi::Errors::UnknownFilterError.new("Unknown filter param '#{m}'")
+        msg = "Unknown filter param '#{m}'"
+        hint = "Valid filters are: #{@filters.keys.join(' ')}"
+        raise HalApi::Errors::UnknownFilterError.new(msg, hint)
       end
     end
   end

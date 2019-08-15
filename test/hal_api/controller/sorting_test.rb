@@ -6,8 +6,7 @@ describe HalApi::Controller::Sorting do
   class SortingTestController < ActionController::Base
     include HalApi::Controller::Sorting
 
-    sort_params default: { one: :desc },
-                allowed: [:one, :two, :three, :four, :five, :camel_case]
+    sort_params default: { one: :desc }, allowed: [:one, :two, :three, :four, :camel_case]
 
     attr_accessor :sort_string
 
@@ -19,7 +18,7 @@ describe HalApi::Controller::Sorting do
   let(:controller) { SortingTestController.new }
 
   before do
-    controller.sort_string = 'one,two:asc,three:desc,four:,five:up,six'
+    controller.sort_string = 'one,two:asc,three:desc,four:,'
   end
 
   it 'sets a default array of sorts' do
@@ -58,13 +57,20 @@ describe HalApi::Controller::Sorting do
     four['four'].must_equal 'desc'
   end
 
-  it 'ignores sorts that are not asc or desc' do
-    five = controller.sorts[4]
-    five.must_be_nil
+  it 'throws an error on sorts that are not asc or desc' do
+    controller.sort_string = 'one:blah'
+    err = assert_raises { controller.sorts }
+    err.must_be_instance_of(HalApi::Errors::BadSortError)
+    err.message.must_match /invalid sort direction/i
+    err.hint.must_match /valid directions are: asc desc/i
   end
 
-  it 'ignores sorts that are not declared' do
-    controller.sorts[5].must_be_nil
+  it 'throws an error on sorts that are not declared' do
+    controller.sort_string = 'foobar'
+    err = assert_raises { controller.sorts }
+    err.must_be_instance_of(HalApi::Errors::BadSortError)
+    err.message.must_match /invalid sort/i
+    err.hint.must_match /valid sorts are: one two/i
   end
 
   it 'allows camel case sorts' do
