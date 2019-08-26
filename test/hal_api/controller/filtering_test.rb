@@ -84,4 +84,14 @@ describe HalApi::Controller::Filtering do
     err.must_be_instance_of(HalApi::Errors::BadFilterValueError)
   end
 
+  it 'sets some default facets' do
+    controller.filter_facets[:one].must_equal '*'
+    controller.filter_facets[:two].must_equal '*'
+    controller.filter_facets[:six].must_equal 'date'
+    controller.filter_facets[:seven].must_equal 'time'
+  end
+
+  it 'sets filters on the collection' do
+    controller.index_collection.filters[:one].must_equal '*'
+  end
 end

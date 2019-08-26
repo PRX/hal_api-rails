@@ -75,6 +75,10 @@ module HalApi::Controller::Resources
     self.class.resource_class.where(nil)
   end
 
+  def resources_query
+    filtered(scoped(resources_base))
+  end
+
   def find_base
     filtered(scoped(included(resources_base)))
   end

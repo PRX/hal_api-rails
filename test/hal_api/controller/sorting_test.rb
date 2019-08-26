@@ -98,4 +98,12 @@ describe HalApi::Controller::Sorting do
     result = controller.sorted(table)
     result.orders.must_equal sorts
   end
+
+  it 'sets some default allowed sorts' do
+    controller.allowed_sorts.must_equal %w(one two three four camel_case)
+  end
+
+  it 'sets filters on the collection' do
+    controller.index_collection.sorts.must_equal %w(one two three four camel_case)
+  end
 end

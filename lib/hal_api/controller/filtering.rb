@@ -53,6 +53,18 @@ module HalApi::Controller::Filtering
     @filters ||= parse_filters_param
   end
 
+  def filter_facets
+    Hash[allowed_filter_names.collect do |n|
+      [n, allowed_filter_types.fetch(n, '*')]
+    end].with_indifferent_access
+  end
+
+  def index_collection
+    collection = defined?(super) ? super : HalApi::PagedCollection.new([])
+    collection.filters = filter_facets
+    collection
+  end
+
   private
 
   def parse_filters_param
