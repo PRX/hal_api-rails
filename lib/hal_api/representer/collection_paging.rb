@@ -7,6 +7,8 @@ module HalApi::Representer::CollectionPaging
     class_eval do
       property :count
       property :total
+      property :filters
+      property :sorts
 
       embeds :items, decorator: lambda{|*| item_decorator }, class: lambda{|*| item_class }, zoom: :always
 
