@@ -6,7 +6,7 @@ class HalApi::PagedCollection
   extend ActiveModel::Naming
   extend Forwardable
 
-  attr_accessor :items, :request, :options, :filters, :sorts
+  attr_accessor :items, :request, :options, :filters
 
   def_delegators :items, :total_count, :prev_page, :next_page, :total_pages, :first_page?, :last_page?
   alias_method :total, :total_count

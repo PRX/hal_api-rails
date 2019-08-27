@@ -31,16 +31,6 @@ module HalApi::Controller::Sorting
     end
   end
 
-  def allowed_sorts
-    allowed_sort_names
-  end
-
-  def index_collection
-    collection = defined?(super) ? super : HalApi::PagedCollection.new([])
-    collection.sorts = allowed_sorts
-    collection
-  end
-
   private
 
   # support ?sorts=attribute,attribute:direction params
