@@ -8,9 +8,20 @@ describe HalApi::Controller::Filtering do
     filter_params :one, :two, :three, :four, :five, six: :date, seven: :time
 
     attr_accessor :filter_string
+    attr_accessor :no_facets
 
     def params
       { filters: filter_string }
+    end
+
+    def filter_facets
+      {
+        one: 2,
+        three: {a: 4, b: 5, c: 0},
+        four: 0,
+        five: {a: 0},
+        six: {}
+      } unless no_facets
     end
   end
 
@@ -84,14 +95,23 @@ describe HalApi::Controller::Filtering do
     err.must_be_instance_of(HalApi::Errors::BadFilterValueError)
   end
 
-  it 'sets some default facets' do
-    controller.filter_facets[:one].must_equal '*'
-    controller.filter_facets[:two].must_equal '*'
-    controller.filter_facets[:six].must_equal 'date'
-    controller.filter_facets[:seven].must_equal 'time'
+  it 'sets facets on the collection' do
+    controller.index_collection.facets[:one].must_equal 2
+    controller.index_collection.facets[:three][:a].must_equal 4
+    controller.index_collection.facets[:three][:b].must_equal 5
   end
 
-  it 'sets filters on the collection' do
-    controller.index_collection.filters[:one].must_equal '*'
+  it 'removes empty facets' do
+    controller.index_collection.facets.keys.must_include 'one'
+    controller.index_collection.facets.keys.must_include 'three'
+    controller.index_collection.facets[:three].keys.wont_include 'c'
+    controller.index_collection.facets.keys.wont_include 'four'
+    controller.index_collection.facets.keys.wont_include 'five'
+    controller.index_collection.facets.keys.wont_include 'six'
+  end
+
+  it 'does not set facets if there are none' do
+    controller.no_facets = true
+    controller.index_collection.facets.must_be_nil
   end
 end

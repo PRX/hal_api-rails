@@ -54,14 +54,24 @@ module HalApi::Controller::Filtering
   end
 
   def filter_facets
-    Hash[allowed_filter_names.collect do |n|
-      [n, allowed_filter_types.fetch(n, '*')]
-    end].with_indifferent_access
   end
 
   def index_collection
     collection = defined?(super) ? super : HalApi::PagedCollection.new([])
-    collection.filters = filter_facets
+
+    # add facets if defined, removing filters/facets with counts of 0
+    non_zero_facets = (filter_facets || {}).tap do |hash|
+      hash.each do |filter_key, value|
+        value.try(:each) do |facet_key, count|
+          value.delete(facet_key) if count.blank? || count == 0
+        end
+        hash.delete(filter_key) if value.blank? || value == 0
+      end
+    end
+    unless non_zero_facets.blank?
+      collection.facets = non_zero_facets.with_indifferent_access
+    end
+
     collection
   end
 
