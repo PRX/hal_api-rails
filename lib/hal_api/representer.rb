@@ -21,5 +21,6 @@ class HalApi::Representer < Roar::Decorator
   include HalApi::Representer::Caches
   include HalApi::Representer::LinkSerialize
   self_link
+  vary_link
   profile_link
 end

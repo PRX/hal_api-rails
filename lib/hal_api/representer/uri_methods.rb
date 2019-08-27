@@ -21,6 +21,15 @@ module HalApi::Representer::UriMethods
       end
     end
 
+    def vary_link
+      link(:vary) do
+        {
+          href: vary_url(represented) + vary_query_params,
+          templated: true,
+        } if vary_url(represented).present? && vary_params.present?
+      end
+    end
+
     def profile_link
       link(:profile) { profile_url(represented) }
     end
@@ -44,6 +53,18 @@ module HalApi::Representer::UriMethods
   def self_url(represented)
     rep = becomes_represented_class(represented)
     polymorphic_path([:api, rep])
+  end
+
+  def vary_url(represented)
+    self_url(represented)
+  end
+
+  def vary_params
+    []
+  end
+
+  def vary_query_params
+    "{?#{vary_params.join(',')}}"
   end
 
   def becomes_represented_class(rep)
