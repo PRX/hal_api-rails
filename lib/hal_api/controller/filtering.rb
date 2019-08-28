@@ -62,7 +62,7 @@ module HalApi::Controller::Filtering
     # add facets if defined, removing filters/facets with counts of 0
     non_zero_facets = (filter_facets || {}).with_indifferent_access.tap do |hash|
       hash.each do |filter_key, facets|
-        hash[filter_key] = facets.select { |f| f.try(:[], :count) > 0 }
+        hash[filter_key] = facets.try(:select) { |f| f.try(:[], :count) > 0 }
         hash.delete(filter_key) if hash[filter_key].blank?
       end
     end
