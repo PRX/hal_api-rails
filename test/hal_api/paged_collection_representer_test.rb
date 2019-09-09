@@ -30,6 +30,13 @@ describe HalApi::PagedCollectionRepresenter do
     representer.represented_url.must_equal "api_stories_path"
   end
 
+  it 'has a vary link' do
+    representer.represented.options[:url] = "api_stories_path"
+    json['_links']['vary'].wont_be_nil
+    json['_links']['vary']['href'].must_equal 'api_stories_path{?page,per,zoom,filters,sorts}'
+    json['_links']['vary']['templated'].must_equal true
+  end
+
   it 'uses a lambda for a url method' do
     representer.represented.options[:url] = ->(options){ options.keys.sort.join('/') }
     representer.href_url_helper({foo: 1, bar: 2, camp: 3}).must_equal "bar/camp/foo"
