@@ -24,7 +24,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "rack-test"
   spec.add_dependency "activesupport", ">= 3.0.0"
   spec.add_dependency "responders", "~> 3.0"
-  spec.add_dependency "roar-rails", "~> 1.0.2"
+  spec.add_dependency "roar-rails", "~> 1.1.0"
   spec.add_dependency "multi_json"
 
   spec.add_development_dependency "bundler"
