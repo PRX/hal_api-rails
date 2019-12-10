@@ -1,12 +1,13 @@
 require 'active_support/concern'
 require 'hal_api/paged_collection'
 
+
 # expects underlying model to have filename, class, and id attributes
 module HalApi::Representer::Embeds
   extend ActiveSupport::Concern
 
   included do
-    Representable::Mapper.send(:include, Resources) if !Representable::Mapper.include?(Resources)
+    #Representable::Mapper.send(:include, Resources) if !Representable::Mapper.include?(Resources)
   end
 
   def normalize_options!(options)
