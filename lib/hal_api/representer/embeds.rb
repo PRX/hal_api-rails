@@ -1,13 +1,13 @@
 require 'active_support/concern'
 require 'hal_api/paged_collection'
-
+require "representable/pipeline_factories"
 
 # expects underlying model to have filename, class, and id attributes
 module HalApi::Representer::Embeds
   extend ActiveSupport::Concern
 
   included do
-    #Representable::Mapper.send(:include, Resources) if !Representable::Mapper.include?(Resources)
+    Representable::Binding.send(:include, HalApiRailsRenderPipeline) if !Representable::Binding.include?(HalApiRailsRenderPipeline)
   end
 
   def normalize_options!(options)
@@ -19,22 +19,36 @@ module HalApi::Representer::Embeds
     [propagated_options, private_options]
   end
 
-  module Resources
+  module HalApiRailsRenderPipeline
 
     def skip_property?(binding, private_options)
       super(binding, private_options) || suppress_embed?(binding, private_options)
     end
 
+    def render_functions
+      funcs = super
+      f = ->(input, options) do
+        # TODO FIXME
+        return
+
+        if suppress_embed?(input, options)
+          return Representable::Pipeline::Stop
+        end
+      end
+      funcs + [f]
+    end
+
     # embed if zoomed
-    def suppress_embed?(binding, options)
-      name = binding[:as].evaluate(self).to_s || binding.name
-      embedded = !!binding[:embedded]
+    def suppress_embed?(input, options)
+      name = options[:binding].evaluate_option(:as, input, options)
+      false
+      #embedded = options[:embedded]
 
-      # not embedded, return false - nothing to suppress
-      return false if !embedded
+      ## not embedded, return false - nothing to suppress
+      #return false if !embedded
 
-      # check if it should be zoomed, suppress if not
-      !embed_zoomed?(name, binding[:zoom], options[:zoom])
+      ## check if it should be zoomed, suppress if not
+      #!embed_zoomed?(name, binding[:zoom], options[:zoom])
     end
 
     def embed_zoomed?(name, zoom_def = nil, zoom_param = nil)
