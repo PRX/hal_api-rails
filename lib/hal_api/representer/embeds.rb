@@ -28,27 +28,27 @@ module HalApi::Representer::Embeds
     def render_functions
       funcs = super
       f = ->(input, options) do
-        # TODO FIXME
-        return
-
         if suppress_embed?(input, options)
           return Representable::Pipeline::Stop
         end
       end
-      funcs + [f]
+      [f] + funcs 
     end
 
     # embed if zoomed
     def suppress_embed?(input, options)
-      name = options[:binding].evaluate_option(:as, input, options)
-      false
-      #embedded = options[:embedded]
+      user_options = options[:options]
 
-      ## not embedded, return false - nothing to suppress
-      #return false if !embedded
+      binding = options[:binding]
+
+      name = binding.evaluate_option(:as, input, options)
+
+      embedded = binding[:embedded]
+
+      return false if !embedded
 
       ## check if it should be zoomed, suppress if not
-      #!embed_zoomed?(name, binding[:zoom], options[:zoom])
+      !embed_zoomed?(name, binding[:zoom], user_options[:zoom])
     end
 
     def embed_zoomed?(name, zoom_def = nil, zoom_param = nil)
