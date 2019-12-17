@@ -4,7 +4,7 @@ require 'test_models'
 
 class TestEmbedsMapper
   attr_accessor :represented
-  include HalApi::Representer::Embeds::Resources
+  include HalApi::Representer::Embeds::HalApiRailsRenderPipeline
 end
 
 EmbedsTest = Struct.new(:title)
