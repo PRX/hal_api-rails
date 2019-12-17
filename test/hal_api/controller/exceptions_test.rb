@@ -1,8 +1,9 @@
 require 'test_helper'
 
 describe HalApi::Controller::Exceptions < ActionController::TestCase do
-  include ActiveSupport::Testing::SetupAndTeardown
-  include ActionController::TestCase::Behavior
+
+  #include ActiveSupport::Testing::SetupAndTeardown
+  #include ActionController::TestCase::Behavior
 
   class TestRoutes
     def extra_keys(*any) []; end
