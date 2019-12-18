@@ -73,10 +73,10 @@ describe HalApi::Representer::Embeds do
       embed :test_object, class: TestObject, zoom: :always
     end
 
-    embed_definition = Embeds1TestRepresenter.representable_attrs[:definitions]['test_object']
+    embed_definition = Embeds1TestRepresenter.representable_attrs['test_object']
     embed_definition.wont_be_nil
     embed_definition[:embedded].must_equal true
-    embed_definition[:class].evaluate(nil).must_equal TestObject
+    embed_definition[:class].call.must_equal TestObject
     embed_definition[:zoom].must_equal :always
   end
 
@@ -86,10 +86,10 @@ describe HalApi::Representer::Embeds do
       embeds :test_objects, class: TestObject, zoom: :always
     end
 
-    embed_definition = Embeds2TestRepresenter.representable_attrs[:definitions]['test_objects']
+    embed_definition = Embeds2TestRepresenter.representable_attrs['test_objects']
     embed_definition.wont_be_nil
     embed_definition[:embedded].must_equal true
-    embed_definition[:class].evaluate(nil).must_equal TestObject
+    embed_definition[:class].call.must_equal TestObject
     embed_definition[:zoom].must_equal :always
   end
 end
