@@ -2,7 +2,7 @@
 require 'test_helper'
 require 'test_models'
 
-class TestEmbedsMapper
+class TestEmbedsRenderPipeline
   attr_accessor :represented
   include HalApi::Representer::Embeds::HalApiRailsRenderPipeline
 end
@@ -12,58 +12,65 @@ EmbedsTest = Struct.new(:title)
 describe HalApi::Representer::Embeds do
   let(:helper) { class TestUriMethods; include Embeds; end.new }
   let(:t_object) { TestObject.new("test", true) }
-  let(:mapper) { TestEmbedsMapper.new.tap { |m| m.represented = t_object } }
-  let(:binding) { Struct.new(:as, :embedded, :zoom).new(TestOption.new('t:test'), true, nil) }
+  let(:mapper) { TestEmbedsRenderPipeline.new.tap { |m| m.represented = t_object } }
+  let(:repr_binding) do
+    Struct.
+      new(:as, :embedded, :zoom).
+      new(TestOption.new('t:test'), true, nil).
+      tap do |b|
+        b.define_singleton_method(:evaluate_option) { |*| 'prop_name' }
+      end
+  end
 
   describe "non embedded property" do
-    let (:non_embed_binding) { binding.tap{|b| b.embedded = false } }
+    let (:non_embed_binding) { repr_binding.tap{|b| b.embedded = false } }
 
     it "is never suppressed" do
-      mapper.suppress_embed?(non_embed_binding, {}).must_equal false
+      mapper.suppress_embed?(non_embed_binding, {options: {}, binding: repr_binding}).must_equal false
     end
   end
 
   describe "default zoom" do
-    let (:default_binding) { binding.tap{|b| b.zoom = nil } }
+    let (:default_binding) { repr_binding.tap{|b| b.zoom = nil } }
 
     it "is not suppressed by default" do
-      mapper.suppress_embed?(default_binding, {}).must_equal false
+      mapper.suppress_embed?(default_binding, {options: {}, binding: repr_binding}).must_equal false
     end
 
     it "is suppressed when specifically unrequested" do
-      mapper.suppress_embed?(default_binding, {zoom: ['t:none']}).must_equal true
+      mapper.suppress_embed?(default_binding,{options: {zoom: ['t:none']}, binding: repr_binding} ).must_equal true
     end
   end
 
   describe "zoom: true" do
-    let (:true_binding) { binding.tap{|b| b.zoom = true } }
+    let (:true_binding) { repr_binding.tap{|b| b.zoom = true } }
 
     it "is not suppressed by default" do
-      mapper.suppress_embed?(true_binding, {}).must_equal false
+      mapper.suppress_embed?(true_binding, {options: {}, binding: repr_binding}).must_equal false
     end
 
     it "is suppressed when specifically unrequested" do
-      mapper.suppress_embed?(true_binding, {zoom: ['t:none']}).must_equal true
+      mapper.suppress_embed?(true_binding, {options: {zoom: ['t:none']}, binding: repr_binding}).must_equal true
     end
 
     it "is unsuppressed when requested" do
-      mapper.suppress_embed?(true_binding, {zoom: ['t:test']}).must_equal false
+      mapper.suppress_embed?(true_binding, {options: {zoom: ['t:test']}, binding: repr_binding}).must_equal false
     end
   end
 
   describe "zoom: always" do
-    let (:always_binding) { binding.tap{|b| b.zoom = :always } }
+    let (:always_binding) { repr_binding.tap{|b| b.zoom = :always } }
 
     it "is not suppressed when specifically unrequested" do
-      mapper.suppress_embed?(always_binding, {zoom: ['t:test']}).must_equal false
+      mapper.suppress_embed?(always_binding, {options: {zoom: ['t:test']}, binding: repr_binding}).must_equal false
     end
   end
 
   describe "zoom: false" do
-    let (:false_binding) { binding.tap{|b| b.zoom = false } }
+    let (:false_binding) { repr_binding.tap{|b| b.zoom = false } }
 
     it "is suppressed by default" do
-      mapper.suppress_embed?(false_binding, {}).must_equal true
+      mapper.suppress_embed?(false_binding, {options: {}, binding: repr_binding}).must_equal true
     end
   end
 
