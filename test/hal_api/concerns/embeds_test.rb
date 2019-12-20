@@ -13,12 +13,14 @@ describe HalApi::Representer::Embeds do
   let(:helper) { class TestUriMethods; include Embeds; end.new }
   let(:t_object) { TestObject.new("test", true) }
   let(:mapper) { TestEmbedsRenderPipeline.new.tap { |m| m.represented = t_object } }
+  let(:prop_name) { 'prop_name' }
   let(:repr_binding) do
+    p = prop_name
     Struct.
       new(:as, :embedded, :zoom).
       new(TestOption.new('t:test'), true, nil).
       tap do |b|
-        b.define_singleton_method(:evaluate_option) { |*| 'prop_name' }
+        b.define_singleton_method(:evaluate_option) { |*| p }
       end
   end
 
@@ -44,6 +46,7 @@ describe HalApi::Representer::Embeds do
 
   describe "zoom: true" do
     let (:true_binding) { repr_binding.tap{|b| b.zoom = true } }
+    let (:prop_name) { 't:test'}
 
     it "is not suppressed by default" do
       mapper.suppress_embed?(true_binding, {options: {}, binding: repr_binding}).must_equal false
