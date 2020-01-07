@@ -1,5 +1,6 @@
 # encoding: utf-8
 require 'test_helper'
+require 'test_models'
 
 describe HalApi::Representer::Curies do
   it 'sets a default curie' do
@@ -11,7 +12,7 @@ describe HalApi::Representer::Curies do
       use_curie(:test)
     end
 
-    Test1Representer.default_curie.must_equal :test
+    _(Test1Representer.default_curie).must_equal :test
   end
 
   it 'defines curie links' do
@@ -32,7 +33,7 @@ describe HalApi::Representer::Curies do
     repr_attrs = repr.instance_variable_get(:@representable_attrs)
     links_obj = repr_attrs["links"]
 
-    links_obj.link_configs.size.must_equal 1
-    links_obj.link_configs.first.first[:rel].must_equal :curies
+    _(links_obj.link_configs.size).must_equal 1
+    _(links_obj.link_configs.first.first[:rel]).must_equal :curies
   end
 end

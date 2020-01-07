@@ -28,7 +28,7 @@ describe HalApi::Representer::Embeds do
     let (:non_embed_binding) { repr_binding.tap{|b| b.embedded = false } }
 
     it "is never suppressed" do
-      mapper.suppress_embed?(non_embed_binding, {options: {}, binding: repr_binding}).must_equal false
+      _(mapper.suppress_embed?(non_embed_binding, {options: {}, binding: repr_binding})).must_equal false
     end
   end
 
@@ -36,11 +36,11 @@ describe HalApi::Representer::Embeds do
     let (:default_binding) { repr_binding.tap{|b| b.zoom = nil } }
 
     it "is not suppressed by default" do
-      mapper.suppress_embed?(default_binding, {options: {}, binding: repr_binding}).must_equal false
+      _(mapper.suppress_embed?(default_binding, {options: {}, binding: repr_binding})).must_equal false
     end
 
     it "is suppressed when specifically unrequested" do
-      mapper.suppress_embed?(default_binding,{options: {zoom: ['t:none']}, binding: repr_binding} ).must_equal true
+      _(mapper.suppress_embed?(default_binding,{options: {zoom: ['t:none']}, binding: repr_binding} )).must_equal true
     end
   end
 
@@ -49,15 +49,15 @@ describe HalApi::Representer::Embeds do
     let (:prop_name) { 't:test'}
 
     it "is not suppressed by default" do
-      mapper.suppress_embed?(true_binding, {options: {}, binding: repr_binding}).must_equal false
+      _(mapper.suppress_embed?(true_binding, {options: {}, binding: repr_binding})).must_equal false
     end
 
     it "is suppressed when specifically unrequested" do
-      mapper.suppress_embed?(true_binding, {options: {zoom: ['t:none']}, binding: repr_binding}).must_equal true
+      _(mapper.suppress_embed?(true_binding, {options: {zoom: ['t:none']}, binding: repr_binding})).must_equal true
     end
 
     it "is unsuppressed when requested" do
-      mapper.suppress_embed?(true_binding, {options: {zoom: ['t:test']}, binding: repr_binding}).must_equal false
+      _(mapper.suppress_embed?(true_binding, {options: {zoom: ['t:test']}, binding: repr_binding})).must_equal false
     end
   end
 
@@ -65,7 +65,7 @@ describe HalApi::Representer::Embeds do
     let (:always_binding) { repr_binding.tap{|b| b.zoom = :always } }
 
     it "is not suppressed when specifically unrequested" do
-      mapper.suppress_embed?(always_binding, {options: {zoom: ['t:test']}, binding: repr_binding}).must_equal false
+      _(mapper.suppress_embed?(always_binding, {options: {zoom: ['t:test']}, binding: repr_binding})).must_equal false
     end
   end
 
@@ -73,7 +73,7 @@ describe HalApi::Representer::Embeds do
     let (:false_binding) { repr_binding.tap{|b| b.zoom = false } }
 
     it "is suppressed by default" do
-      mapper.suppress_embed?(false_binding, {options: {}, binding: repr_binding}).must_equal true
+      _(mapper.suppress_embed?(false_binding, {options: {}, binding: repr_binding})).must_equal true
     end
   end
 
@@ -84,10 +84,10 @@ describe HalApi::Representer::Embeds do
     end
 
     embed_definition = Embeds1TestRepresenter.representable_attrs['test_object']
-    embed_definition.wont_be_nil
-    embed_definition[:embedded].must_equal true
-    embed_definition[:class].call.must_equal TestObject
-    embed_definition[:zoom].must_equal :always
+    _(embed_definition).wont_be_nil
+    _(embed_definition[:embedded]).must_equal true
+    _(embed_definition[:class].call).must_equal TestObject
+    _(embed_definition[:zoom]).must_equal :always
   end
 
   it "defines an embed to set a representable property" do
@@ -97,9 +97,9 @@ describe HalApi::Representer::Embeds do
     end
 
     embed_definition = Embeds2TestRepresenter.representable_attrs['test_objects']
-    embed_definition.wont_be_nil
-    embed_definition[:embedded].must_equal true
-    embed_definition[:class].call.must_equal TestObject
-    embed_definition[:zoom].must_equal :always
+    _(embed_definition).wont_be_nil
+    _(embed_definition[:embedded]).must_equal true
+    _(embed_definition[:class].call).must_equal TestObject
+    _(embed_definition[:zoom]).must_equal :always
   end
 end

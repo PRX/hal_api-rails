@@ -35,28 +35,28 @@ describe HalApi::Controller::Exceptions < ActionController::TestCase do
 
   it 'rescues from standard errors' do
     get :throwerror, {format: :hal}
-    response.status.must_equal 500
+    _(response.status).must_equal 500
     json = JSON.parse(response.body)
-    json['status'].must_equal 500
-    json['message'].must_equal 'what now'
-    json.key?('backtrace').must_equal false
+    _(json['status']).must_equal 500
+    _(json['message']).must_equal 'what now'
+    _(json.key?('backtrace')).must_equal false
   end
 
   it 'optionally shows backtraces' do
     Rails.configuration.consider_all_requests_local = true
     get :throwerror, {format: :hal}
     json = JSON.parse(response.body)
-    json.key?('backtrace').must_equal true
-    json['backtrace'].must_be_instance_of Array
+    _(json.key?('backtrace')).must_equal true
+    _(json['backtrace']).must_be_instance_of Array
   end
 
   it 'does not try to set a location header for post errors' do
     post :throwerror, {format: :hal}
-    response.status.must_equal 500
+    _(response.status).must_equal 500
     json = JSON.parse(response.body)
-    json['status'].must_equal 500
-    json['message'].must_equal 'what now'
-    response.headers['Location'].must_be_nil
+    _(json['status']).must_equal 500
+    _(json['message']).must_equal 'what now'
+    _(response.headers['Location']).must_be_nil
   end
 
   describe 'with new relic defined' do
@@ -79,7 +79,7 @@ describe HalApi::Controller::Exceptions < ActionController::TestCase do
       end
       NewRelic::Agent.stub :notice_error, notice do
         get :throwerror, {format: :hal}
-        response.status.must_equal 500
+        _(response.status).must_equal 500
         notice.verify
       end
     end
@@ -88,7 +88,7 @@ describe HalApi::Controller::Exceptions < ActionController::TestCase do
       notice = -> { raise StandardError.new('should not have called this') }
       NewRelic::Agent.stub :notice_error, notice do
         get :thrownotfound, {format: :hal}
-        response.status.must_equal 404
+        _(response.status).must_equal 404
       end
     end
 
