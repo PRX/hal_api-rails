@@ -7,7 +7,7 @@ module HalApi::Representer::Embeds
   extend ActiveSupport::Concern
 
   included do
-    Representable::Binding.send(:include, HalApiRailsRenderPipeline) if !Representable::Binding.include?(HalApiRailsRenderPipeline)
+    # Representable::Binding.send(:include, HalApiRailsRenderPipeline) if !Representable::Binding.include?(HalApiRailsRenderPipeline)
   end
 
   def normalize_options!(options)
@@ -32,7 +32,7 @@ module HalApi::Representer::Embeds
           return Representable::Pipeline::Stop
         end
       end
-      [f] + funcs 
+      [f] + funcs
     end
 
     # embed if zoomed
