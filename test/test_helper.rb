@@ -18,7 +18,6 @@ module Dummy
     config.encoding = 'utf-8'
     config.eager_load = false
     config.active_support.test_order = :random
-    config.secret_token = '1234'
     config.secret_key_base = '5678'
   end
 end
