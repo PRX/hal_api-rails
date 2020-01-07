@@ -11,10 +11,10 @@ module HalApi::Controller::Exceptions
               when 5
                 ::ActionDispatch::ExceptionWrapper.new(ActiveSupport::BacktraceCleaner.new, exception)
               else
-                ::ActionDispatch::ExceptionWrapper.new(env, exception)
+                ::ActionDispatch::ExceptionWrapper.new(request.env, exception)
               end
 
-    log_error(env, wrapper)
+    log_error(request.env, wrapper)
 
     error = exception
     if !error.is_a?(HalApi::Errors::ApiError)
