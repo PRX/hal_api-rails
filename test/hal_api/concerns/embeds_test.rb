@@ -102,4 +102,17 @@ describe HalApi::Representer::Embeds do
     _(embed_definition[:class].call).must_equal TestObject
     _(embed_definition[:zoom]).must_equal :always
   end
+
+  it 'does not interfere with non-halapi representers' do
+    class ThingRepresenter < Representable::Decorator
+      include Representable::JSON
+      include HalApi::Representer::Embeds
+      property :foo
+    end
+
+    class Thing < OpenStruct; end
+
+    thing = Thing.new(foo: 'bar', any: 'thing')
+    _(ThingRepresenter.new(thing).to_json).must_equal '{"foo":"bar"}'
+  end
 end
