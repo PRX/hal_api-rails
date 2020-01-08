@@ -41,6 +41,9 @@ module HalApi::Representer::Embeds
 
       binding = options[:binding]
 
+      # guard against non-hal representers
+      return false unless binding[:as].present?
+
       name = binding.evaluate_option(:as, input, options)
 
       embedded = binding[:embedded]

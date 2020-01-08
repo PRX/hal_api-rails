@@ -48,4 +48,12 @@ module HalApi::Errors
       super(msg, 400, hint)
     end
   end
+
+  module Representer
+    include Roar::JSON::HAL
+
+    property :status
+    property :message
+    property :backtrace, if: -> (*) { Rails.configuration.try(:consider_all_requests_local) }
+  end
 end

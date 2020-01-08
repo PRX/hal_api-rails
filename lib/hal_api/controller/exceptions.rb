@@ -25,11 +25,12 @@ module HalApi::Controller::Exceptions
 
     notice_error(exception) if error.status >= 500
 
-    json = {status: error.status, message: error.message}
-    if Rails.configuration.try(:consider_all_requests_local)
-      json[:backtrace] = error.backtrace
-    end
-    render status: error.status, json: json
+    respond_with(
+      error,
+      status: error.status,
+      location: nil, # for POST requests
+      represent_with: HalApi::Errors::Representer
+    )
   end
 
   def log_error(env, wrapper)
