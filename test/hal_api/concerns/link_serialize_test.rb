@@ -16,8 +16,8 @@ describe HalApi::Representer::LinkSerialize do
       end
     end
 
-    TestRepresenter.representable_attrs[:definitions]['set_foo_uri'].wont_be_nil
-    TestRepresenter.representable_attrs[:definitions]['set_foo_uri'][:readable].must_equal false
-    TestRepresenter.representable_attrs[:definitions]['set_foo_uri'][:reader].wont_be_nil
+    _(TestRepresenter.representable_attrs['set_foo_uri']).wont_be_nil
+    _(TestRepresenter.representable_attrs['set_foo_uri'][:readable]).must_equal false
+    _(TestRepresenter.representable_attrs['set_foo_uri'][:reader]).wont_be_nil
   end
 end

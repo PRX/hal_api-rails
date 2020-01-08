@@ -11,56 +11,56 @@ describe HalApi::PagedCollection do
   let(:paged_collection) { HalApi::PagedCollection.new(paged_items, OpenStruct.new(params: {})) }
 
   it 'creates a paged collection' do
-    paged_collection.wont_be_nil
-    paged_collection.items.wont_be_nil
-    paged_collection.request.wont_be_nil
+    _(paged_collection).wont_be_nil
+    _(paged_collection.items).wont_be_nil
+    _(paged_collection.request).wont_be_nil
   end
 
   it 'has delegated methods' do
-    paged_collection.request.params.must_equal Hash.new
-    paged_collection.params.must_equal Hash.new
+    _(paged_collection.request.params).must_equal Hash.new
+    _(paged_collection.params).must_equal Hash.new
 
-    paged_collection.items.count.must_equal 10
-    paged_collection.count.must_equal 10
-    paged_collection.items.total_count.must_equal 26
-    paged_collection.total.must_equal 26
+    _(paged_collection.items.count).must_equal 10
+    _(paged_collection.count).must_equal 10
+    _(paged_collection.items.total_count).must_equal 26
+    _(paged_collection.total).must_equal 26
   end
 
   it 'implements to_model' do
     paged_collection = HalApi::PagedCollection.new([])
-    paged_collection.to_model.must_equal paged_collection
+    _(paged_collection.to_model).must_equal paged_collection
   end
 
   it 'is never persisted' do
     paged_collection = HalApi::PagedCollection.new([])
-    paged_collection.wont_be :persisted?
+    _(paged_collection).wont_be :persisted?
   end
 
   it 'has a stubbed request by default' do
     paged_collection = HalApi::PagedCollection.new([])
-    paged_collection.params.must_equal Hash.new
+    _(paged_collection.params).must_equal Hash.new
   end
 
   it 'will be a root resource be default' do
-    paged_collection.is_root_resource.must_equal true
+    _(paged_collection.is_root_resource).must_equal true
   end
 
   it 'will be a root resource based on options' do
     paged_collection.options[:is_root_resource] = false
-    paged_collection.is_root_resource.must_equal false
+    _(paged_collection.is_root_resource).must_equal false
   end
 
   it 'has an item_class' do
-    paged_collection.item_class.must_equal(TestObject)
+    _(paged_collection.item_class).must_equal(TestObject)
   end
 
   it 'has an item_decorator' do
-    paged_collection.item_decorator.must_equal(Api::TestObjectRepresenter)
+    _(paged_collection.item_decorator).must_equal(Api::TestObjectRepresenter)
   end
 
   it 'has an url' do
     paged_collection.options[:url] = "test"
-    paged_collection.url.must_equal "test"
+    _(paged_collection.url).must_equal "test"
   end
 
   it 'has a parent' do
@@ -76,8 +76,8 @@ describe HalApi::PagedCollection do
     end
 
     a = TestBar.new
-    a.wont_be_instance_of TestFoo
+    _(a).wont_be_instance_of TestFoo
     paged_collection.options[:parent] = a
-    paged_collection.parent.must_be_instance_of TestFoo
+    _(paged_collection.parent).must_be_instance_of TestFoo
   end
 end

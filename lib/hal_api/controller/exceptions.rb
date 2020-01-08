@@ -11,10 +11,10 @@ module HalApi::Controller::Exceptions
               when 5
                 ::ActionDispatch::ExceptionWrapper.new(ActiveSupport::BacktraceCleaner.new, exception)
               else
-                ::ActionDispatch::ExceptionWrapper.new(env, exception)
+                ::ActionDispatch::ExceptionWrapper.new(request.env, exception)
               end
 
-    log_error(env, wrapper)
+    log_error(request.env, wrapper)
 
     error = exception
     if !error.is_a?(HalApi::Errors::ApiError)
@@ -25,12 +25,11 @@ module HalApi::Controller::Exceptions
 
     notice_error(exception) if error.status >= 500
 
-    respond_with(
-      error,
-      status: error.status,
-      location: nil, # for POST requests
-      represent_with: HalApi::Errors::Representer
-    )
+    json = {status: error.status, message: error.message}
+    if Rails.configuration.try(:consider_all_requests_local)
+      json[:backtrace] = error.backtrace
+    end
+    render status: error.status, json: json
   end
 
   def log_error(env, wrapper)
