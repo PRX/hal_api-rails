@@ -37,11 +37,12 @@ module HalApi::Representer::Embeds
 
     # embed if zoomed
     def suppress_embed?(input, options)
-      return false if input.nil?
-
       user_options = options[:options]
 
       binding = options[:binding]
+
+      # guard against non-hal representers
+      return false unless binding[:as].present?
 
       name = binding.evaluate_option(:as, input, options)
 
