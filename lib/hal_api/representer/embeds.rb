@@ -28,8 +28,6 @@ module HalApi::Representer::Embeds
 
     # embed if zoomed
     def suppress_embed?(input, options)
-      user_options = options[:options]
-
       binding = options[:binding]
 
       # guard against non-hal representers
