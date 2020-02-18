@@ -40,7 +40,8 @@ describe HalApi::Representer::Embeds do
     end
 
     it "is suppressed when specifically unrequested" do
-      _(mapper.suppress_embed?(default_binding,{options: {zoom: ['t:none']}, binding: repr_binding} )).must_equal true
+      options = {user_options: {zoom: ['t:none']}}
+      _(mapper.suppress_embed?(default_binding, {options: options, binding: repr_binding} )).must_equal true
     end
   end
 
@@ -53,11 +54,13 @@ describe HalApi::Representer::Embeds do
     end
 
     it "is suppressed when specifically unrequested" do
-      _(mapper.suppress_embed?(true_binding, {options: {zoom: ['t:none']}, binding: repr_binding})).must_equal true
+      options = {user_options: {zoom: ['t:none']}}
+      _(mapper.suppress_embed?(true_binding, {options: options, binding: repr_binding})).must_equal true
     end
 
     it "is unsuppressed when requested" do
-      _(mapper.suppress_embed?(true_binding, {options: {zoom: ['t:test']}, binding: repr_binding})).must_equal false
+      options = {user_options: {zoom: ['t:test']}}
+      _(mapper.suppress_embed?(true_binding, {options: options, binding: repr_binding})).must_equal false
     end
   end
 
@@ -65,7 +68,8 @@ describe HalApi::Representer::Embeds do
     let (:always_binding) { repr_binding.tap{|b| b.zoom = :always } }
 
     it "is not suppressed when specifically unrequested" do
-      _(mapper.suppress_embed?(always_binding, {options: {zoom: ['t:test']}, binding: repr_binding})).must_equal false
+      options = {user_options: {zoom: ['t:test']}}
+      _(mapper.suppress_embed?(always_binding, {options: options, binding: repr_binding})).must_equal false
     end
   end
 

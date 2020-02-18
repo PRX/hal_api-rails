@@ -10,15 +10,6 @@ module HalApi::Representer::Embeds
     Representable::Binding.send(:include, HalApiRailsRenderPipeline) if !Representable::Binding.include?(HalApiRailsRenderPipeline)
   end
 
-  def normalize_options!(options)
-    propagated_options, private_options = super(options)
-
-    # we want this to propogate, and be available for `skip_property?`, so don't delete
-    private_options[:zoom] = options[:zoom] if options.key?(:zoom)
-
-    [propagated_options, private_options]
-  end
-
   module HalApiRailsRenderPipeline
 
     def skip_property?(binding, private_options)
@@ -37,8 +28,6 @@ module HalApi::Representer::Embeds
 
     # embed if zoomed
     def suppress_embed?(input, options)
-      user_options = options[:options]
-
       binding = options[:binding]
 
       # guard against non-hal representers
@@ -51,7 +40,8 @@ module HalApi::Representer::Embeds
       return false if !embedded
 
       ## check if it should be zoomed, suppress if not
-      !embed_zoomed?(name, binding[:zoom], user_options[:zoom])
+      user_zooms = options[:options].try(:[], :user_options).try(:[], :zoom)
+      !embed_zoomed?(name, binding[:zoom], user_zooms)
     end
 
     def embed_zoomed?(name, zoom_def = nil, zoom_param = nil)
