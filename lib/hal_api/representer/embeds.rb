@@ -85,7 +85,9 @@ module HalApi::Representer::Embeds
         options[:getter] ||= ->(*) do
           cnt = send(name).count
           per = getter_per == :all ? cnt : getter_per
-          if cnt <= per
+          if cnt == 0
+            items = send(name).page(1).per(Kaminari.config.default_per_page)
+          elsif cnt <= per
             items = Kaminari.paginate_array(send(name)).page(1).per(per)
           else
             items = send(name).page(1).per(per)
