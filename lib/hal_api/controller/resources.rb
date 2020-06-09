@@ -102,7 +102,11 @@ module HalApi::Controller::Resources
   end
 
   def paged(arel)
-    arel.page(params[:page]).per(params[:per])
+    if params[:per].to_i <= 0
+      arel.page(params[:page]).per(Kaminari.config.default_per_page)
+    else
+      arel.page(params[:page]).per(params[:per])
+    end
   end
 
   def scoped(res)
