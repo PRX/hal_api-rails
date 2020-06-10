@@ -46,6 +46,7 @@ module HalApi::Representer::CollectionPaging
   # if it is a lambda, execute in the context against the represented.parent (if there is one) or represented
   def href_url_helper(options={})
     if represented_url.nil?
+      options = options.except(:format)
       result = url_for(options.merge(only_path: true)) rescue nil
       if represented.parent
         result ||= polymorphic_path([:api, represented.parent, represented.item_class], options) rescue nil
