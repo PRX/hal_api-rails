@@ -11,11 +11,11 @@ module HalApi::Representer::CollectionPaging
       embeds :items, decorator: lambda{|*| item_decorator }, class: lambda{|*| item_class }, zoom: :always
 
       link :prev do
-        href_url_helper(params.merge(page: represented.prev_page)) unless represented.first_page?
+        href_url_helper(params.merge(page: represented.prev_page)) if represented.prev_page
       end
 
       link :next do
-        href_url_helper(params.merge(page: represented.next_page)) unless represented.last_page?
+        href_url_helper(params.merge(page: represented.next_page)) if represented.next_page
       end
 
       link :first do
@@ -46,6 +46,7 @@ module HalApi::Representer::CollectionPaging
   # if it is a lambda, execute in the context against the represented.parent (if there is one) or represented
   def href_url_helper(options={})
     if represented_url.nil?
+      options = options.except(:format)
       result = url_for(options.merge(only_path: true)) rescue nil
       if represented.parent
         result ||= polymorphic_path([:api, represented.parent, represented.item_class], options) rescue nil
