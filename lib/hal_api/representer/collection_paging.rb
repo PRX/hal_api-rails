@@ -12,11 +12,11 @@ module HalApi::Representer::CollectionPaging
       embeds :items, decorator: lambda{|*| item_decorator }, class: lambda{|*| item_class }, zoom: :always
 
       link :prev do
-        href_url_helper(params.merge(page: represented.prev_page)) unless represented.first_page?
+        href_url_helper(params.merge(page: represented.prev_page)) if represented.prev_page
       end
 
       link :next do
-        href_url_helper(params.merge(page: represented.next_page)) unless represented.last_page?
+        href_url_helper(params.merge(page: represented.next_page)) if represented.next_page
       end
 
       link :first do
