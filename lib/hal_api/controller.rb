@@ -36,8 +36,7 @@ module HalApi::Controller
   private
 
   def set_accepts
-    mime_comparator = case HalApi::rails_major_version
-                      when 5
+    mime_comparator = if HalApi::rails_major_version >= 5
                         Mime[:html]
                       else
                         Mime::HTML
@@ -46,8 +45,7 @@ module HalApi::Controller
   end
 
   def env
-    case HalApi.rails_major_version
-    when 5
+    if HalApi.rails_major_version >= 5
       request.env
     else
       super

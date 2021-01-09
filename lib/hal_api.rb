@@ -6,6 +6,6 @@ module HalApi
   require 'hal_api/responders/api_responder'
 
   def self.rails_major_version
-    ::Rails.version.split('.')[0].to_i
+    ::Rails::VERSION::MAJOR
   end
 end
