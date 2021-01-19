@@ -7,8 +7,7 @@ module HalApi::Controller::Exceptions
   extend ActiveSupport::Concern
 
   def respond_with_error(exception)
-    wrapper = case HalApi.rails_major_version
-              when 5
+    wrapper = if HalApi.rails_major_version >= 5
                 ::ActionDispatch::ExceptionWrapper.new(ActiveSupport::BacktraceCleaner.new, exception)
               else
                 ::ActionDispatch::ExceptionWrapper.new(request.env, exception)
