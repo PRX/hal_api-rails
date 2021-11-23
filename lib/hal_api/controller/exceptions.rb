@@ -7,22 +7,27 @@ module HalApi::Controller::Exceptions
   extend ActiveSupport::Concern
 
   def respond_with_error(exception)
-    wrapper = if HalApi.rails_major_version >= 5
-                ::ActionDispatch::ExceptionWrapper.new(ActiveSupport::BacktraceCleaner.new, exception)
-              else
-                ::ActionDispatch::ExceptionWrapper.new(request.env, exception)
-              end
-
-    log_error(request.env, wrapper)
-
-    error = exception
-    if !error.is_a?(HalApi::Errors::ApiError)
-      error = HalApi::Errors::ApiError.new(error.message).tap do |e|
-        e.set_backtrace(error.backtrace)
+    wrapper =
+      if HalApi.rails_major_version >= 5
+        ::ActionDispatch::ExceptionWrapper.new(ActiveSupport::BacktraceCleaner.new, exception)
+      else
+        ::ActionDispatch::ExceptionWrapper.new(request.env, exception)
       end
-    end
 
-    notice_error(exception) if error.status >= 500
+    error =
+      if exception.is_a?(HalApi::Errors::ApiError) && exception.status >= 500
+        log_error(request.env, wrapper)
+        notice_error(exception)
+        exception
+      elsif exception.is_a?(HalApi::Errors::ApiError)
+        exception
+      else
+        log_error(request.env, wrapper)
+        notice_error(exception)
+        HalApi::Errors::ApiError.new(exception.message).tap do |e|
+          e.set_backtrace(exception.backtrace)
+        end
+      end
 
     respond_with(
       error,
