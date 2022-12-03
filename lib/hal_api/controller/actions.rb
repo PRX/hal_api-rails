@@ -74,8 +74,7 @@ module HalApi::Controller::Actions
       if zoom_param
         p[:user_options] = (p[:user_options] || {}).merge(zoom: zoom_param)
       end
-    end.
-    to_h
+    end.to_h
   end
 
   def zoom_param
@@ -91,7 +90,7 @@ module HalApi::Controller::Actions
   end
 
   def hal_authorize(resource)
-    if !respond_to?(:authorize)
+    unless respond_to?(:authorize, true)
       define_singleton_method(:authorize) do |_resource|
         true
       end
@@ -100,7 +99,6 @@ module HalApi::Controller::Actions
 
     authorize(resource)
   end
-
 
   module ClassMethods
     def allow_params(action, *params)

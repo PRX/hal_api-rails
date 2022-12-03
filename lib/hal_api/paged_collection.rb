@@ -72,9 +72,10 @@ class HalApi::PagedCollection
   # If this is an embedded collection, the parent will be set here for use in urls
   def parent
     rep = options[:parent]
-    return rep unless rep.respond_to?(:becomes)
+    return rep unless rep.respond_to?(:becomes, true)
+
     klass = rep.class.try(:base_class)
-    (klass && (klass != rep.class)) ? rep.becomes(klass) : rep
+    klass && (klass != rep.class) ? rep.becomes(klass) : rep
   end
 
   def count
