@@ -31,5 +31,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'pry-byebug'
   spec.add_development_dependency 'rack-test'
   spec.add_development_dependency 'rails', '~> 5.2.4'
-  spec.add_development_dependency 'rake', '~> 10.0'
+  spec.add_development_dependency 'rake',  '>= 12.3.3'
 end

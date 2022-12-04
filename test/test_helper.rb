@@ -8,7 +8,6 @@ require 'roar-rails'
 require 'hal_api/rails'
 
 require 'pry-byebug'
-require 'minitest/spec'
 require 'minitest/autorun'
 
 ENV['RAILS_ENV'] = 'test'
