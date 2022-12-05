@@ -119,9 +119,9 @@ describe HalApi::Controller::Actions do
     end
 
     it 'authorizes the resource' do
-      _(controller).wont_be :respond_to?, :authorize
+      _(controller).wont_be :respond_to?, :authorize, true
       assert controller.send(:hal_authorize, {})
-      _(controller).must_be :respond_to?, :authorize
+      _(controller).must_be :respond_to?, :authorize, true
     end
 
     # it 'can add paging to resources query' do

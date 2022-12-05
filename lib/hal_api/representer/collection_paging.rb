@@ -64,10 +64,10 @@ module HalApi::Representer::CollectionPaging
       return result
     end
 
-    if represented_url.respond_to?(:call)
-      self.instance_exec(options, &represented_url)
-    elsif self.respond_to?(represented_url)
-      self.send(represented_url, options)
+    if represented_url.respond_to?(:call, true)
+      instance_exec(options, &represented_url)
+    elsif respond_to?(represented_url, true)
+      send(represented_url, options)
     else
       represented_url.to_s
     end
