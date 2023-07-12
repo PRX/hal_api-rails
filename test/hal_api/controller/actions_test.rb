@@ -78,7 +78,7 @@ describe HalApi::Controller::Actions do
     it 'handles invalid content type errors' do
       _(lambda do
         controller.create
-      end).must_raise Roar::Rails::UnsupportedMediaType
+      end).must_raise Mime::Type::InvalidMimeType
     end
 
     it 'handles not found errors' do
