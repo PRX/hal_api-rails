@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
   spec.email         = ['carhoden@gmail.com', 'andrew@beginsinwonder.com']
 
   spec.summary       = 'JSON HAL APIs on Rails in the style of PRX'
-  spec.description   = 'JSON HAL APIs on Rails in the style of PRX v4. Uses ROAR'
+  spec.description   = 'JSON HAL APIs on Rails in the style of PRX. Uses ROAR'
   spec.homepage      = 'https://www.github.com/PRX/'
   spec.license       = 'MIT'
 
@@ -30,6 +30,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'minitest'
   spec.add_development_dependency 'pry-byebug'
   spec.add_development_dependency 'rack-test'
-  spec.add_development_dependency 'rails', '~> 5.2.4'
-  spec.add_development_dependency 'rake',  '>= 12.3.3'
+  spec.add_development_dependency 'rails', '>= 5'
+  spec.add_development_dependency 'rake',  '>= 12'
 end
