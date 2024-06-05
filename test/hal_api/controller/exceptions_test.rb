@@ -71,7 +71,7 @@ describe HalApi::Controller::Exceptions do
     end
 
     it 'notices 500 errors' do
-      notice = MiniTest::Mock.new
+      notice = Minitest::Mock.new
       notice.expect :call, nil do |err|
         err.message == 'what now'
       end
