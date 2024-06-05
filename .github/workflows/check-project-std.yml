@@ -1,0 +1,7 @@
+name: Check project standards
+
+on: push
+
+jobs:
+  check-ruby:
+    uses: prx/.github/.github/workflows/check-project-std-ruby.yml@main
