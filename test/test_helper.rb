@@ -18,6 +18,7 @@ module Dummy
     config.eager_load = false
     config.active_support.test_order = :random
     config.secret_key_base = '5678'
+    config.active_support.cache_format_version = 7.0
   end
 end
 Dummy::Application.initialize!
