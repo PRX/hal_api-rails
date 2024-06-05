@@ -1,4 +1,4 @@
-require 'ostruct'
+require "ostruct"
 
 module HalApi::Controller::Filtering
   extend ActiveSupport::Concern
@@ -18,11 +18,11 @@ module HalApi::Controller::Filtering
     def method_missing(m, *args, &_block)
       if @filters.key?(m) && args.empty?
         @filters[m]
-      elsif m.to_s[-1] == '?' && args.empty? && @filters.key?(m.to_s.chop)
+      elsif m.to_s[-1] == "?" && args.empty? && @filters.key?(m.to_s.chop)
         !!@filters[m.to_s.chop]
       else
         msg = "Unknown filter param '#{m}'"
-        hint = "Valid filters are: #{@filters.keys.join(' ')}"
+        hint = "Valid filters are: #{@filters.keys.join(" ")}"
         raise HalApi::Errors::UnknownFilterError.new(msg, hint)
       end
     end
@@ -86,25 +86,25 @@ module HalApi::Controller::Filtering
     end
 
     # parse query param
-    (params[:filters] || '').split(',').each do |str|
-      name, value = (str || '').split('=', 2)
+    (params[:filters] || "").split(",").each do |str|
+      name, value = (str || "").split("=", 2)
       next unless filters_map.key?(name)
 
       # convert/guess type of known params
       filters_map[name] =
-        if force_types[name] == 'date'
+        if force_types[name] == "date"
           parse_date(value)
-        elsif force_types[name] == 'time'
+        elsif force_types[name] == "time"
           parse_time(value)
         elsif value.nil?
           true
         elsif value.blank?
-          ''
-        elsif [false, 'false'].include? value
+          ""
+        elsif [false, "false"].include? value
           false
-        elsif [true, 'true'].include? value
+        elsif [true, "true"].include? value
           true
-        elsif value =~ /\A[-+]?\d+\z/
+        elsif /\A[-+]?\d+\z/.match?(value)
           value.to_i
         else
           value
@@ -120,7 +120,7 @@ module HalApi::Controller::Filtering
   end
 
   def parse_time(str)
-    Time.find_zone('UTC').parse(str) || (raise ArgumentError.new 'Nil result!')
+    Time.find_zone("UTC").parse(str) || (raise ArgumentError.new "Nil result!")
   rescue ArgumentError
     raise HalApi::Errors::BadFilterValueError.new "Invalid filter time: '#{str}'"
   end

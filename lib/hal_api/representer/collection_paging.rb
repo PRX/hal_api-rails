@@ -1,4 +1,4 @@
-require 'hal_api/representer'
+require "hal_api/representer"
 
 module HalApi::Representer::CollectionPaging
   extend ActiveSupport::Concern
@@ -9,7 +9,7 @@ module HalApi::Representer::CollectionPaging
       property :total
       property :facets
 
-      embeds :items, decorator: lambda{|*| item_decorator }, class: lambda{|*| item_class }, zoom: :always
+      embeds :items, decorator: lambda { |*| item_decorator }, class: lambda { |*| item_class }, zoom: :always
 
       link :prev do
         href_url_helper(params.merge(page: represented.prev_page)) if represented.prev_page
@@ -42,7 +42,7 @@ module HalApi::Representer::CollectionPaging
   end
 
   def vary_params
-    %w(page per zoom filters sorts)
+    %w[page per zoom filters sorts]
   end
 
   def profile_url(represented)
@@ -53,14 +53,26 @@ module HalApi::Representer::CollectionPaging
   # if it is a method name, execute against self - the representer - which has local url helpers methods
   # if it is a sym/string, but self does not respond to it, then just use that string
   # if it is a lambda, execute in the context against the represented.parent (if there is one) or represented
-  def href_url_helper(options={})
+  def href_url_helper(options = {})
     if represented_url.nil?
       options = options.except(:format)
-      result = url_for(options.merge(only_path: true)) rescue nil
-      if represented.parent
-        result ||= polymorphic_path([:api, represented.parent, represented.item_class], options) rescue nil
+      result = begin
+        url_for(options.merge(only_path: true))
+      rescue
+        nil
       end
-      result ||= polymorphic_path([:api, represented.item_class], options) rescue nil
+      if represented.parent
+        result ||= begin
+          polymorphic_path([:api, represented.parent, represented.item_class], options)
+        rescue
+          nil
+        end
+      end
+      result ||= begin
+        polymorphic_path([:api, represented.item_class], options)
+      rescue
+        nil
+      end
       return result
     end
 

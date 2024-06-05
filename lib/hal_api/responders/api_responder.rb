@@ -1,4 +1,4 @@
-require 'roar/rails/responder'
+require "roar/rails/responder"
 
 module HalApi::Responders
   class ApiResponder < Roar::Rails::Responder

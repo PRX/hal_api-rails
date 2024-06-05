@@ -1,17 +1,17 @@
-require 'active_support/concern'
-require 'responders'
-require 'roar-rails'
+require "active_support/concern"
+require "responders"
+require "roar-rails"
 
 module HalApi::Controller
   extend ActiveSupport::Concern
 
-  require 'hal_api/controller/actions'
-  require 'hal_api/controller/cache'
-  require 'hal_api/controller/resources'
-  require 'hal_api/controller/exceptions'
-  require 'hal_api/controller/sorting'
-  require 'hal_api/controller/filtering'
-  require 'hal_api/responders/api_responder'
+  require "hal_api/controller/actions"
+  require "hal_api/controller/cache"
+  require "hal_api/controller/resources"
+  require "hal_api/controller/exceptions"
+  require "hal_api/controller/sorting"
+  require "hal_api/controller/filtering"
+  require "hal_api/responders/api_responder"
 
   include HalApi::Controller::Actions
   include HalApi::Controller::Cache
@@ -36,11 +36,11 @@ module HalApi::Controller
   private
 
   def set_accepts
-    mime_comparator = if HalApi::rails_major_version >= 5
-                        Mime[:html]
-                      else
-                        Mime::HTML
-                      end
+    mime_comparator = if HalApi.rails_major_version >= 5
+      Mime[:html]
+    else
+      Mime::HTML
+    end
     request.format = :json if request.format == mime_comparator
   end
 

@@ -1,5 +1,6 @@
 module HalApi::Controller::Resources
   extend ActiveSupport::Concern
+
   private
 
   # action specific resources
@@ -36,7 +37,7 @@ module HalApi::Controller::Resources
   end
 
   def resource
-    resource = instance_variable_get("@#{resource_name}")
+    resource = instance_variable_get(:"@#{resource_name}")
     return resource if resource
 
     resource = if params[:id]
@@ -49,7 +50,7 @@ module HalApi::Controller::Resources
   end
 
   def resource=(res)
-    instance_variable_set("@#{resource_name}", res)
+    instance_variable_set(:"@#{resource_name}", res)
   end
 
   def resource_name
@@ -59,12 +60,12 @@ module HalApi::Controller::Resources
   # Plural resources
 
   def resources
-    instance_variable_get("@#{resources_name}") ||
+    instance_variable_get(:"@#{resources_name}") ||
       self.resources = decorate_query(resources_base)
   end
 
   def resources=(res)
-    instance_variable_set("@#{resources_name}", res)
+    instance_variable_set(:"@#{resources_name}", res)
   end
 
   def resources_name
@@ -128,7 +129,7 @@ module HalApi::Controller::Resources
       self.resource_representer = representer_class
     end
 
-    def find_method(new_method=nil)
+    def find_method(new_method = nil)
       if new_method.present?
         @find_method = new_method
       else

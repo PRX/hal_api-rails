@@ -1,10 +1,8 @@
-# encoding: utf-8
-require 'test_helper'
-require 'test_models'
+require "test_helper"
+require "test_models"
 
 describe HalApi::Representer::Curies do
-  it 'sets a default curie' do
-
+  it "sets a default curie" do
     class Test1Representer < Roar::Decorator
       include Roar::JSON::HAL
       include HalApi::Representer::Curies
@@ -15,13 +13,13 @@ describe HalApi::Representer::Curies do
     _(Test1Representer.default_curie).must_equal :test
   end
 
-  it 'defines curie links' do
+  it "defines curie links" do
     class Test2Representer < Roar::Decorator
       include Roar::JSON::HAL
       include HalApi::Representer::Curies
 
       curies(:test) do
-        [{ name: :test, href: "http://meta.test.com/relation/{rel}", templated: true }]
+        [{name: :test, href: "http://meta.test.com/relation/{rel}", templated: true}]
       end
     end
 

@@ -1,7 +1,7 @@
-require 'forwardable'
-require 'openssl'
-require 'active_model'
-require 'ostruct'
+require "forwardable"
+require "openssl"
+require "active_model"
+require "ostruct"
 
 class HalApi::PagedCollection
   extend ActiveModel::Naming
@@ -28,11 +28,11 @@ class HalApi::PagedCollection
     false
   end
 
-  def initialize(items, request=nil, options=nil)
-    self.items   = items
+  def initialize(items, request = nil, options = nil)
+    self.items = items
     self.request = request || request_stub
     self.options = options || {}
-    self.options[:is_root_resource] = true unless (self.options[:is_root_resource] == false)
+    self.options[:is_root_resource] = true unless self.options[:is_root_resource] == false
   end
 
   def cache_key
@@ -40,7 +40,7 @@ class HalApi::PagedCollection
       keys << i.try(:id)
       keys << i.try(:updated_at).try(:utc).to_i
     end
-    key_components = ['c', item_class.model_name.cache_key]
+    key_components = ["c", item_class.model_name.cache_key]
     key_components << OpenSSL::Digest::MD5.hexdigest(item_keys.join)
     ActiveSupport::Cache.expand_cache_key(key_components)
   end
@@ -50,7 +50,7 @@ class HalApi::PagedCollection
   end
 
   def is_root_resource
-    !!self.options[:is_root_resource]
+    !!options[:is_root_resource]
   end
 
   def show_curies
@@ -58,7 +58,7 @@ class HalApi::PagedCollection
   end
 
   def item_class
-    options[:item_class] || self.items.first.try(:item_class) || self.items.first.class
+    options[:item_class] || items.first.try(:item_class) || items.first.class
   end
 
   def item_decorator
@@ -76,7 +76,7 @@ class HalApi::PagedCollection
     return rep unless rep.respond_to?(:becomes, true)
 
     klass = rep.class.try(:base_class)
-    klass && (klass != rep.class) ? rep.becomes(klass) : rep
+    (klass && (klass != rep.class)) ? rep.becomes(klass) : rep
   end
 
   def count

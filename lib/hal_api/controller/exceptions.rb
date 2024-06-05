@@ -1,5 +1,5 @@
-require 'action_dispatch/http/request'
-require 'action_dispatch/middleware/exception_wrapper'
+require "action_dispatch/http/request"
+require "action_dispatch/middleware/exception_wrapper"
 
 # Since we are taking over exception handling, make sure we log exceptions
 # https://github.com/rails/rails/blob/4-2-stable/actionpack/lib/action_dispatch/middleware/debug_exceptions.rb
@@ -38,7 +38,7 @@ module HalApi::Controller::Exceptions
   end
 
   def log_error(env, wrapper)
-    logger = env['action_dispatch.logger'] || self.logger || ActiveSupport::Logger.new($stderr)
+    logger = env["action_dispatch.logger"] || self.logger || ActiveSupport::Logger.new($stderr)
     return unless logger
 
     exception = wrapper.exception

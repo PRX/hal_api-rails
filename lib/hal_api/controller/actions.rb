@@ -44,7 +44,7 @@ module HalApi::Controller::Actions
   private
 
   def destroy_redirect
-    { action: 'index' }
+    {action: "index"}
   end
 
   def index_options
@@ -56,7 +56,7 @@ module HalApi::Controller::Actions
 
   def create_options
     show_options.tap do |options|
-      options[:location] = ''
+      options[:location] = ""
     end
   end
 
@@ -78,10 +78,8 @@ module HalApi::Controller::Actions
   end
 
   def zoom_param
-    @zoom_param ||= begin
-      if (zp = params[:zoom]) && !zp.nil?
-        Array(zp.split(',')).map(&:strip).compact.sort
-      end
+    @zoom_param ||= if (zp = params[:zoom]) && !zp.nil?
+      Array(zp.split(",")).map(&:strip).compact.sort
     end
   end
 

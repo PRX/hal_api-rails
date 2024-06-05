@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 module HalApi::RepresentedModel
   extend ActiveSupport::Concern
 
@@ -20,6 +18,10 @@ module HalApi::RepresentedModel
   end
 
   included do
-    extend ActiveModel::Naming unless (method(:model_name) rescue nil)
+    extend ActiveModel::Naming unless begin
+      method(:model_name)
+    rescue
+      nil
+    end
   end
 end

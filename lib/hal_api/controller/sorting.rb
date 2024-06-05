@@ -13,7 +13,7 @@ module HalApi::Controller::Sorting
       self.allowed_sort_names = args[:allowed].map(&:to_s).uniq
       self.default_sort = args[:default]
       if default_sort && !default_sort.is_a?(Array)
-        self.default_sort = Array[default_sort]
+        self.default_sort = [default_sort]
       end
     end
   end
@@ -23,7 +23,7 @@ module HalApi::Controller::Sorting
   end
 
   def sorted(arel)
-    apply_sorts = !sorts.blank? ? sorts : default_sort
+    apply_sorts = (!sorts.blank?) ? sorts : default_sort
     if apply_sorts.blank?
       super
     else
@@ -42,19 +42,19 @@ module HalApi::Controller::Sorting
 
     # parse sort param for name of the column and direction
     # default is descending, because I say so, and we have a bias towards the new
-    (params[:sorts] || '').split(',').each do |str|
-      name, direction = (str || '').split(':', 2).map { |s| s.to_s.strip }
+    (params[:sorts] || "").split(",").each do |str|
+      name, direction = (str || "").split(":", 2).map { |s| s.to_s.strip }
       name = name.underscore
-      direction = direction.blank? ? 'desc' : direction.downcase
+      direction = direction.blank? ? "desc" : direction.downcase
       unless allowed_sorts.include?(name)
-        hint = "Valid sorts are: #{allowed_sorts.join(' ')}"
+        hint = "Valid sorts are: #{allowed_sorts.join(" ")}"
         raise HalApi::Errors::BadSortError.new("Invalid sort: #{name}", hint)
       end
-      unless ['asc', 'desc'].include?(direction)
+      unless ["asc", "desc"].include?(direction)
         hint = "Valid directions are: asc desc"
         raise HalApi::Errors::BadSortError.new("Invalid sort direction: #{direction}", hint)
       end
-      sorts_array << { name => direction }
+      sorts_array << {name => direction}
     end
     sorts_array
   end

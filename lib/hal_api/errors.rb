@@ -1,7 +1,6 @@
-require 'roar-rails'
+require "roar-rails"
 
 module HalApi::Errors
-
   class ApiError < StandardError
     attr_accessor :status
     attr_accessor :hint
@@ -15,7 +14,7 @@ module HalApi::Errors
 
   class Forbidden < ApiError
     def initialize(message = nil, hint = nil)
-      super(message || 'Forbidden', 403, hint)
+      super(message || "Forbidden", 403, hint)
     end
   end
 
@@ -54,6 +53,6 @@ module HalApi::Errors
 
     property :status
     property :message
-    property :backtrace, if: -> (*) { Rails.configuration.try(:consider_all_requests_local) }
+    property :backtrace, if: ->(*) { Rails.configuration.try(:consider_all_requests_local) }
   end
 end
