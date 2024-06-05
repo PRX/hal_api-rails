@@ -3,6 +3,7 @@ require 'hal_api/paged_collection'
 require 'test_models'
 require 'kaminari'
 require 'kaminari/models/array_extension'
+require 'ostruct'
 
 describe HalApi::PagedCollection do
 

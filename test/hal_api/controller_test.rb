@@ -1,68 +1,15 @@
 require 'test_helper'
+require 'test_models'
 require 'action_controller'
+require 'ostruct'
 
 describe HalApi::Controller do
-
-  class Foo
-    include ActiveModel::Model
-
-    attr_accessor :id, :is_root_resource, :updated_at, :created_at
-    cattr_accessor :_id
-
-    self._id = 1
-
-    def self.find(*_args)
-      Foo.new.tap do |f|
-        f.id = _id
-        self._id += 1
-        f.updated_at = DateTime.parse('1970-01-01 00:01:00')
-      end
-    end
-
-    def self.inject(*args, &block)
-      self._id = 1
-      [find, find].inject(*args, &block)
-    end
-
-    def self.order(*_args); self; end
-    def self.page(*_args); self; end
-    def self.per(*_args); self; end
-    def self.where(*_args); self; end
-    def self.build; new; end
-  end
-
-  class FooRepresenter
-  end
-
-  class FoosController < ActionController::Base
-    include HalApi::Controller
-
-    cattr_accessor :_caches_action
-
-    attr_accessor :_respond_with, :request, :params
-
-    def params
-      @params ||= ActionController::Parameters.new(action: 'update', id: 1)
-    end
-
-    def request
-      @request ||= OpenStruct.new('put?' => false, 'post?' => false)
-    end
-
-    def respond_with(*args)
-      self._respond_with = args
-    end
-
-    def self.caches_action(action, options = {})
-      self._caches_action ||= {}
-      self._caches_action[action] = options
-    end
-  end
 
   let (:controller) { FoosController.new }
 
   describe 'errors' do
     it 'handles invalid content type errors' do
+      controller.request = OpenStruct.new('content_type' => 'nope')
       _(lambda do
         controller.create
       end).must_raise Mime::Type::InvalidMimeType
@@ -77,7 +24,7 @@ describe HalApi::Controller do
 
     it 'retrieves new resource when id not found' do
       controller.params = ActionController::Parameters.new(action: 'create')
-      controller.request = OpenStruct.new('put?' => false, 'post?' => true)
+      controller.request = OpenStruct.new('put?' => false, 'post?' => true, 'content_type' => 'application/json')
       _(controller.send(:resource)).must_be_instance_of Foo
       _(controller.send(:resource).id).must_be_nil
     end

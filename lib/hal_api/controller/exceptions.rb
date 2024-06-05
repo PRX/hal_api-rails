@@ -46,12 +46,14 @@ module HalApi::Controller::Exceptions
     trace = wrapper.application_trace
     trace = wrapper.framework_trace if trace.empty?
 
-    ActiveSupport::Deprecation.silence do
-      message = "\n#{exception.class} (#{exception.message}):\n"
-      message << exception.annoted_source_code.to_s if exception.respond_to?(:annoted_source_code)
-      message << "  " << trace.join("\n  ")
-      logger.fatal("#{message}\n\n")
+    message = "\n#{exception.class} (#{exception.message}):\n"
+    if exception.respond_to?(:annoted_source_code)
+      ActiveSupport::Deprecation.silence do
+        message << exception.annoted_source_code.to_s
+      end
     end
+    message << "  " << trace.join("\n  ")
+    logger.fatal("#{message}\n\n")
   end
 
   def notice_error(error)

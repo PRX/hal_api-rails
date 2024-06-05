@@ -1,6 +1,7 @@
 require 'forwardable'
 require 'openssl'
 require 'active_model'
+require 'ostruct'
 
 class HalApi::PagedCollection
   extend ActiveModel::Naming

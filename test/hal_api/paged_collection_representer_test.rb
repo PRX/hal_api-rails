@@ -2,6 +2,7 @@ require 'test_helper'
 require 'hal_api/paged_collection'
 require 'hal_api/paged_collection_representer'
 require 'test_models'
+require 'ostruct'
 
 describe HalApi::PagedCollectionRepresenter do
 
