@@ -43,7 +43,7 @@ module HalApi::Controller::Sorting
     # parse sort param for name of the column and direction
     # default is descending, because I say so, and we have a bias towards the new
     (params[:sorts] || '').split(',').each do |str|
-      name, direction = str.split(':', 2).map { |s| s.to_s.strip }
+      name, direction = (str || '').split(':', 2).map { |s| s.to_s.strip }
       name = name.underscore
       direction = direction.blank? ? 'desc' : direction.downcase
       unless allowed_sorts.include?(name)

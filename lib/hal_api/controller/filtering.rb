@@ -1,3 +1,5 @@
+require 'ostruct'
+
 module HalApi::Controller::Filtering
   extend ActiveSupport::Concern
 
@@ -85,7 +87,7 @@ module HalApi::Controller::Filtering
 
     # parse query param
     (params[:filters] || '').split(',').each do |str|
-      name, value = str.split('=', 2)
+      name, value = (str || '').split('=', 2)
       next unless filters_map.key?(name)
 
       # convert/guess type of known params

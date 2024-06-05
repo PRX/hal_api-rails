@@ -1,6 +1,7 @@
 # encoding: utf-8
 require 'test_helper'
 require 'test_models'
+require 'ostruct'
 
 class TestEmbedsRenderPipeline
   attr_accessor :represented
