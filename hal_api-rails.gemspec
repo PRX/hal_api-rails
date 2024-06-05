@@ -26,6 +26,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'roar-rails'
 
   spec.add_development_dependency 'bundler'
+  spec.add_development_dependency 'standard'
   spec.add_development_dependency 'kaminari'
   spec.add_development_dependency 'minitest'
   spec.add_development_dependency 'pry-byebug'
