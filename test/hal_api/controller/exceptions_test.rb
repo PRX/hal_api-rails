@@ -17,6 +17,22 @@ describe HalApi::Controller::Exceptions do
     def thrownotfound
       raise HalApi::Errors::NotFound.new
     end
+
+    def logger
+      @logger ||= Logger.new(logged)
+    end
+
+    def logged
+      @_logged ||= StringIO.new
+    end
+  end
+
+  class AnnotatedError < StandardError
+    def annoted_source_code
+      "121:  str.to_s"
+    end
+
+    alias_method :annotated_source_code, :annoted_source_code
   end
 
   before do
@@ -46,6 +62,22 @@ describe HalApi::Controller::Exceptions do
     json = JSON.parse(response.body)
     _(json.key?('backtrace')).must_equal true
     _(json['backtrace']).must_be_instance_of Array
+  end
+
+  it 'logs the source code silently' do
+    cleaner = ::ActiveSupport::BacktraceCleaner.new
+    exception = AnnotatedError.new("did you hear something?")
+    wrapper =
+      if HalApi.rails_major_version >= 5
+        ::ActionDispatch::ExceptionWrapper.new(cleaner, exception)
+      else
+        ::ActionDispatch::ExceptionWrapper.new(:test, exception)
+      end
+
+    controller = ExceptionsTestController.new
+
+    controller.log_error(:test, wrapper)
+    _(controller.logged.string).must_match(/FATAL.*AnnotatedError.*121:  str\.to_s/m)
   end
 
   it 'does not try to set a location header for post errors' do
