@@ -47,12 +47,17 @@ module HalApi::Controller::Exceptions
     trace = wrapper.framework_trace if trace.empty?
 
     message = "\n#{exception.class} (#{exception.message}):\n"
-    if exception.respond_to?(:annoted_source_code)
-      ActiveSupport::Deprecation.silence do
-        message << exception.annoted_source_code.to_s
-      end
+    silencer = if ActiveSupport::Deprecation.respond_to?(:silence)
+      ActiveSupport::Deprecation
+    else
+      # rails 7 change to use instance of depracator
+      ActiveSupport::Deprecation.new
     end
-    message << "  " << trace.join("\n  ")
+    silencer.silence do
+      message.concat(exception.annoted_source_code) if exception.respond_to?(:annoted_source_code)
+      # rails 6 change annoted_source_code -> annotated_source_code
+      message.concat(exception.annotated_source_code) if exception.respond_to?(:annotated_source_code)
+    end
     logger.fatal("#{message}\n\n")
   end
 
